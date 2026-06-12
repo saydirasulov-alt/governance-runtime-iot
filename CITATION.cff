@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+title: Instrumented Governance Runtime for AI-Driven IoT
+message: If you use this software, please cite the associated paper.
+type: software
+authors:
+  - family-names: Saydirasulov Saydirasulovic
+    given-names: Norkobil
+    orcid: https://orcid.org/0009-0009-3883-9403
+  - family-names: Davronbekov
+    given-names: Dilmurod Abdujalilovich
+    orcid: https://orcid.org/0000-0003-1193-7918
+  - family-names: Makhmudov
+    given-names: Makhsum Mubashirovich
+  - family-names: Cho
+    given-names: Young Im
+    orcid: https://orcid.org/0000-0003-0184-7599
+preferred-citation:
+  type: article
+  title: "Instrumented Governance Runtime for AI-Driven IoT: Policy Overhead, Rollback, and Adversarial Characterization"
+  journal: Sensors
+  publisher:
+    name: MDPI
+  year: 2026
