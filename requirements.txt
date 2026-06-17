@@ -1,2 +1,4 @@
 numpy>=1.24
 scipy>=1.10
+pyyaml  # optional: YAML policy configs (JSON twins work without it)
+matplotlib  # AI-failure ROC figure (ISH2)

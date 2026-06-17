@@ -1,0 +1,9 @@
+{
+  "setpoint": 21.6,
+  "action": "reboot",
+  "timestamp": 1781670554.0247955,
+  "source": "ai_service_1",
+  "intent_id": "i16",
+  "device_id": "d16",
+  "queue_depth": 10
+}

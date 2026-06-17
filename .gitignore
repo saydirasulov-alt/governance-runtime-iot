@@ -1,9 +1,7 @@
 __pycache__/
 *.pyc
-*.pyo
+.snapshots/
 .DS_Store
+*.bak
+.vscode/
 .idea/
-*.egg-info/
-.pytest_cache/
-venv/
-.env
