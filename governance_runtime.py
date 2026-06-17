@@ -1,12 +1,13 @@
 """Governance Runtime — inline backend plus reproducible HTTP/CLI timing backends (optional live execution), ablation flags, M/M/1 queue, network simulation."""
 import os
 import time, json, hashlib, random, subprocess, urllib.request
+from policy_loader import load_policy, evaluate_policy, set_rule_enabled
 
 class GovernanceRuntime:
     def __init__(self, backend="inline", enable_policy=True, enable_rollback=True,
                  enable_checkpoint=True, enable_audit=True,
                  network_loss=0.0, network_jitter_ms=0.0, cloud_delay_ms=0.0,
-                 g2_check_source=False):
+                 g2_check_source=False, policy_config=None):
         self.backend = backend
         self.enable_policy = enable_policy
         self.enable_rollback = enable_rollback
@@ -16,6 +17,13 @@ class GovernanceRuntime:
         self.network_jitter_ms = network_jitter_ms
         self.cloud_delay_ms = cloud_delay_ms
         self.g2_check_source = g2_check_source  # corrected-G2 variant
+        # Gates are loaded from an external declarative spec (YAML/JSON), not
+        # hardcoded. policy_config=None loads the bundled default, which is
+        # byte-for-byte equivalent to the legacy gates. Changing governance
+        # behaviour is a config edit, no code change.
+        self.policy = load_policy(policy_config)
+        if g2_check_source:
+            set_rule_enabled(self.policy, 'G2', 'source', True)
         self.config = {"t_min": 15.0, "t_max": 30.0,
             "allowed_actions": ["set_temperature", "set_mode", "set_fan"], "q_max": 100}
         self.checkpoints = []
@@ -34,22 +42,12 @@ class GovernanceRuntime:
 
     # === G1-G4 POLICY LOGIC (shared across all backends) ===
     def _evaluate_gates(self, intent, queue_depth):
-        sp = intent.get("setpoint")
-        if sp is not None and (sp < self.config["t_min"] or sp > self.config["t_max"]):
-            return "REJECT", "G1"
-        if intent.get("action") not in self.config["allowed_actions"]:
-            return "REJECT", "G1"
-        if intent.get("timestamp") is None:
-            return "REJECT", "G2"
-        # G2: source field check (disabled by default = specification gap;
-        # enabled in the corrected-G2 variant evaluated in the revision)
-        if self.g2_check_source and intent.get("source") is None:
-            return "REJECT", "G2"
-        if queue_depth >= self.config["q_max"]:
-            return "THROTTLE", "G3"
-        if intent.get("intent_id") is None or intent.get("device_id") is None:
-            return "REJECT", "G4"
-        return "PASS", None
+        # Decisions come from the declarative policy spec (policy_loader), evaluated
+        # over the intent augmented with the live queue depth. Gate order, bounds,
+        # allowed actions and mandatory fields all live in policy_config.yaml.
+        ctx = dict(intent)
+        ctx["queue_depth"] = queue_depth
+        return evaluate_policy(self.policy, ctx)
 
     # === THREE BACKEND MODES WITH REPRODUCIBLE TIMING DIFFERENCES ===
     def evaluate_inline(self, intent, qd):

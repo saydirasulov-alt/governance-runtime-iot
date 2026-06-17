@@ -1,0 +1,24 @@
+# Governance policy G1-G4 -- declarative specification.
+# Operators change governance behaviour by editing THIS file; no Python edits.
+# Evaluated by governance_runtime.py and (safety subset) by policy_gates.rego.
+gates:
+  - id: G1
+    name: Safety
+    rules:
+      - {type: range,     field: setpoint, min: 15.0, max: 30.0, nullable: true, on_fail: REJECT}
+      - {type: allowed,   field: action,   values: [set_temperature, set_mode, set_fan], on_fail: REJECT}
+  - id: G2
+    name: Privacy
+    rules:
+      - {type: required,  field: timestamp, on_fail: REJECT}
+      # Specification gap analysed in the paper: source check OFF by default.
+      - {type: required,  field: source,    enabled: false, on_fail: REJECT}
+  - id: G3
+    name: Resilience
+    rules:
+      - {type: threshold, field: queue_depth, max: 100, on_fail: THROTTLE}
+  - id: G4
+    name: Auditability
+    rules:
+      - {type: required,  field: intent_id, on_fail: REJECT}
+      - {type: required,  field: device_id, on_fail: REJECT}
