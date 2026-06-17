@@ -1,9 +1,0 @@
-{
-  "setpoint": 18.1,
-  "action": "set_mode",
-  "timestamp": null,
-  "source": null,
-  "intent_id": "i0",
-  "device_id": "d0",
-  "queue_depth": 10
-}

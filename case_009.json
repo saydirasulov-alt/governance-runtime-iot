@@ -1,9 +1,0 @@
-{
-  "setpoint": 27.0,
-  "action": "reboot",
-  "timestamp": 1781670554.0246727,
-  "source": null,
-  "intent_id": "i15",
-  "device_id": "d15",
-  "queue_depth": 10
-}

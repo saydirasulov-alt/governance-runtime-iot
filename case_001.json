@@ -1,9 +1,0 @@
-{
-  "setpoint": 11.2,
-  "action": "set_mode",
-  "timestamp": 1781670554.024168,
-  "source": "ai_service_0",
-  "intent_id": "i9",
-  "device_id": "d9",
-  "queue_depth": 10
-}

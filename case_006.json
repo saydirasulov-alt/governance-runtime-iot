@@ -1,9 +1,0 @@
-{
-  "setpoint": 23.8,
-  "action": "set_temperature",
-  "timestamp": 1781670554.023875,
-  "source": null,
-  "intent_id": "i5",
-  "device_id": "d5",
-  "queue_depth": 120
-}

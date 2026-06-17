@@ -1,9 +1,0 @@
-{
-  "setpoint": 17.5,
-  "action": "reboot",
-  "timestamp": 1781670554.025156,
-  "source": "ai_service_1",
-  "intent_id": "i19",
-  "device_id": "d19",
-  "queue_depth": 10
-}

@@ -1,9 +1,0 @@
-{
-  "setpoint": 12.4,
-  "action": "set_temperature",
-  "timestamp": 1781670554.0235996,
-  "source": "ai_service_2",
-  "intent_id": "i2",
-  "device_id": "d2",
-  "queue_depth": 120
-}

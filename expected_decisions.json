@@ -1,9 +1,0 @@
-{
-  "setpoint": 25.7,
-  "action": "set_temperature",
-  "timestamp": 1781670554.0240467,
-  "source": "ai_service_1",
-  "intent_id": "i7",
-  "device_id": "d7",
-  "queue_depth": 120
-}
