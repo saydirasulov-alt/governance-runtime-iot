@@ -1,0 +1,38 @@
+HOW TO RUN THIS ON YOUR PC
+==========================
+
+1) Open a terminal in this folder (the one containing run_sil.py).
+
+2) Install what it needs (once):
+
+       pip install numpy pandas scikit-learn matplotlib pytest
+
+3) Run the tests first. If these do not pass, do not trust any number:
+
+       python -m pytest tests/ -q
+       -> expect: 17 passed
+
+4) Run the experiments (about 40 seconds):
+
+       python run_sil.py
+
+   This TRAINS THE MODEL ON YOUR MACHINE from ds/datatraining.txt, runs every
+   experiment, and writes:
+       results/sil_results.csv
+       results/sil_results.json
+       results/SIL_LOG.txt      <- stamped with YOUR hostname, OS and Python version
+
+5) Make the figures:
+
+       python make_figures.py
+       -> figures/fig_sil_1_layers.png ... fig_sil_4_residual.png
+
+That is the whole thing. The numbers you get should match the ones in README.md.
+If they do not, tell me -- a mismatch is information, not an inconvenience.
+
+NOTE ON HONESTY
+---------------
+No physical hardware was operated. Every physical quantity is produced by the
+digital twin in gsim/plant.py. The Raspberry Pi backends in gsim/hal.py are real,
+complete, and released, but they were NOT run. Do not let any sentence in the paper
+imply otherwise.

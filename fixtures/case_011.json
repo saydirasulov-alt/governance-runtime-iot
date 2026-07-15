@@ -1,0 +1,9 @@
+{
+  "setpoint": 17.7,
+  "action": "set_mode",
+  "timestamp": 1781670554.0243673,
+  "source": "ai_service_2",
+  "intent_id": "i11",
+  "device_id": "d11",
+  "queue_depth": 0
+}
