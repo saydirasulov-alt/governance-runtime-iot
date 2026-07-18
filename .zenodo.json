@@ -1,6 +1,6 @@
 {
-  "title": "A Closed-Loop Study of Runtime Governance for AI-Driven IoT: reproducibility package",
-  "description": "Software-in-the-loop testbed and deployable governance service for the Sensors paper 'A Closed-Loop Study of Runtime Governance for AI-Driven IoT'. Closes the control loop through a physical plant model and measures which runtime governance mechanism reduces physical risk; the principal result is that admission control removes a substantial fraction of the unsafe exposure while checkpoint rollback removes only a further 0.2%. No physical hardware was operated.",
+  "title": "A Closed-Loop Measurement Study of Runtime Governance for AI-Driven IoT: reproducibility package",
+  "description": "Software-in-the-loop testbed and deployable governance service for the Sensors paper 'A Closed-Loop Measurement Study of Runtime Governance for AI-Driven IoT'. Closes the control loop through a physical plant model and measures which runtime governance mechanism reduces physical risk; the principal result is that admission control removes a substantial fraction of the unsafe exposure while checkpoint rollback removes only a further 0.2%. No physical hardware was operated.",
   "upload_type": "software",
   "license": "MIT",
   "access_right": "open",
