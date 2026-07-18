@@ -1,0 +1,9 @@
+{
+  "setpoint": 24.6,
+  "action": "set_temperature",
+  "timestamp": 1781670554.0241148,
+  "source": "ai_service_2",
+  "intent_id": "i8",
+  "device_id": "d8",
+  "queue_depth": 0
+}

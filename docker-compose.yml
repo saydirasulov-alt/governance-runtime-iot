@@ -1,0 +1,23 @@
+# One command brings up a real governance plane:  docker compose up
+services:
+  broker:
+    image: eclipse-mosquitto:2
+    command: mosquitto -c /mosquitto-no-auth.conf
+    ports: ["1883:1883"]
+
+  opa:
+    image: openpolicyagent/opa:latest
+    command: run --server --addr 0.0.0.0:8181 /policy/governance.rego
+    volumes: ["./policy:/policy:ro"]
+    ports: ["8181:8181"]
+
+  governance:
+    build: .
+    command: python -m runtime.run --broker broker --pdp opa --opa-url http://opa:8181/v1/data/governance/decision
+    depends_on: [broker, opa]
+    volumes: ["./results:/app/results"]
+
+  actuator:
+    build: .
+    command: python -m devices.actuator_sim_main --broker broker --device room-1
+    depends_on: [broker]

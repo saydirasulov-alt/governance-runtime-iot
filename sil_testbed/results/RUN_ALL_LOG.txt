@@ -1,0 +1,510 @@
+==============================================================================
+RUN ALL
+==============================================================================
+  host    PC-Lab
+  os      Windows 10
+  python  3.10.20
+  cwd     C:\Users\Gee\SIL3
+
+  No physical hardware is operated. Every physical quantity below is produced by
+  the digital twin, whose model and parameters are given in full in gsim/plant.py.
+
+------------------------------------------------------------------------------
+[1/5]  tests   (about 5 s)
+------------------------------------------------------------------------------
+.........................                                                [100%]
+25 passed in 1.63s
+
+[1/5] tests OK  (2 s)
+
+------------------------------------------------------------------------------
+[2/5]  E1-E7   (about 60 s)
+------------------------------------------------------------------------------
+
+==============================================================================
+SOFTWARE-IN-THE-LOOP (SIL) GOVERNANCE TESTBED
+==============================================================================
+  host   PC-Lab   Windows 10   python 3.10.20
+  plant  single-zone RC thermal digital twin
+  NOTE   no physical hardware was operated; all physical values are twin values
+
+==============================================================================
+0.  THE AI SERVICE, TRAINED ON REAL SENSOR DATA
+==============================================================================
+  training samples          8143
+  training MAE              0.402 degC
+  CO2 threshold (train p95) 755 ppm  <- from the TRAINING split only
+
+==============================================================================
+0b. THE DIGITAL TWIN, AND WHY ITS TIME CONSTANTS ARE THE WHOLE STORY
+==============================================================================
+  envelope time constant       3.00 h
+  max heating rate             +0.109 degC/min
+  max cooling rate             -0.207 degC/min
+  equilibrium at full heat     41.7 degC
+  safe band occupied / vacant  (20.0, 25.0) / (15.0, 30.0) degC
+  twin CO2 check: 1 occupant -> 1050 ppm steady state,
+    consistent with recorded occupied CO2. (The gates use RECORDED CO2, not this.)
+
+  monitor period 5 s | rollback trigger 0.25 degC (5 sigma of sensor noise)
+  rollback budget unlimited in the
+  safety comparisons (a budget truncates the arms it fires on and would make a
+  shut-down system look safe); it gets its own experiment, E6.
+  in-distribution   2665 min, 36% occupied
+  shifted           9752 min, 21% occupied
+
+==============================================================================
+E1.  CLOSED-LOOP SAFETY UNDER DISTRIBUTION SHIFT
+==============================================================================
+  Same model, same trace, same plant. Only the governance changes.
+
+  ungoverned                 exposure  1185.3 C-min   peak  3.75 C   avail 100.0%   rb  0   -
+  shipped, no rollback       exposure   954.8 C-min   peak  3.75 C   avail 100.0%   rb  0   -
+  shipped + rollback         exposure   953.2 C-min   peak  3.81 C   avail 100.0%   rb  9   -
+  corrected + rollback       exposure   727.7 C-min   peak  3.81 C   avail 100.0%   rb  5   -
+  oracle + rollback          exposure     1.2 C-min   peak  0.16 C   avail 100.0%   rb  1   -
+
+  Read the third and fourth columns together, because they do not say what
+  the earlier version of this paper assumed they would.
+
+  Admission control alone:  1185 -> 955 degC-min.
+  Adding ROLLBACK:         955 -> 953 degC-min.  That is 0.2%.
+  Peak excursion:          3.75 -> 3.81 degC.  Rollback did not reduce the peak at all.
+
+  Rollback, against a plant with thermal inertia, recovers almost nothing. It
+  cannot: by the time the room has left the safe band and the runtime has
+  restored a safe setpoint, the heat is already in the room, and getting it back
+  out takes the tens of minutes that E2 measures. The exposure has been paid
+  before the mechanism can act.
+
+  What DOES work is not getting there. The oracle policy -- same runtime, same
+  rollback, same plant, one extra predicate that happens to be right -- lands at
+  1.2 degC-min. The runtime mechanisms are not the
+  limiting factor. The policy's estimate of context is.
+
+  And the deployable proxy for that context sits between the two: the corrected
+  CO2 predicate leaves 728 degC-min, because under
+  distribution shift CO2 stops tracking occupancy. That gap, 728 vs 1.2, is a
+  measurement of how much residual PHYSICAL risk is attributable to the context
+  estimator rather than to the governance runtime. That number is the paper.
+
+==============================================================================
+E2.  WHAT ROLLBACK ACTUALLY BUYS  (the number the paper says it does not measure)
+==============================================================================
+   #  peak excursion    detect    PHYSICAL RECOVERY     exposure
+                degC         s                    s     degC-min
+   1            2.34     125.0       3020  (50 min)         60.1
+   2            3.27      65.0       1885  (31 min)         71.2
+   3            3.03       0.0       3900  (65 min)        162.5
+   4            3.81       0.0       1740  (29 min)        101.9
+   5            3.45       0.0      8760  (146 min)        257.2
+   6            1.60       0.0      8035  (134 min)        145.9
+   7            1.16       0.0       1400  (23 min)         19.0
+   8            1.09     247.5      6858  (114 min)         78.7
+   9            1.72     257.5       3640  (61 min)         56.5
+
+  physical recovery, median    3640 s  (60.7 min)
+  physical recovery, worst     8760 s  (146.0 min)
+
+  For contrast, the governance DECISION path was measured on the real MQTT
+  stack at a median of 0.44 ms. The decision is six orders of magnitude faster
+  than its own physical consequence. Reporting only the decision latency, as
+  the previous version of this paper did, describes the cheap half of rollback
+  and silently omits the expensive half.
+
+  Rollback is fast to DECIDE and slow to TAKE EFFECT,
+  because rooms have thermal mass. Rollback ENDS an excursion; it does not
+  undo it. The 953 degC-min still on the clock under the shipped policy is
+  exposure that already happened before the runtime could get the room back.
+  The corrected predicate leaves 728 degC-min, because the intent never actuates at all.
+
+==============================================================================
+E3.  IRREVERSIBILITY: WHERE ROLLBACK IS NOT AVAILABLE AT ALL
+==============================================================================
+  Some actuations cannot be undone by issuing another command: a compressor
+  lockout, a fired suppression system, a purged tank. We model an actuator that
+  LATCHES above 28 degC and ignores every command afterwards.
+
+  shipped, latching actuator exposure  4951.7 C-min   peak  3.63 C   avail  10.8%   rb  1   FAILED_SAFE@1050m (irreversible actuation)
+  corrected, latching actuator exposure   727.7 C-min   peak  3.81 C   avail 100.0%   rb  5   -
+
+  Under the shipped policy the runtime loses authority and enters FAILED_SAFE.
+  It does not claim to have recovered, because it has not: the room is latched
+  hot and only a human can clear it. A rollback mechanism that reported success
+  here would be lying. Under the corrected policy the intent is never admitted,
+  so the irreversible actuator is never reached. Prevention is the only thing
+  that works against irreversibility, and that is an argument for policy
+  correctness, not for better rollback.
+
+==============================================================================
+E4.  THE SAME EXPERIMENT IN-DISTRIBUTION
+==============================================================================
+  If the model is not stressed, governance looks like overhead. The gate did not
+  change; the world did.
+
+  ungoverned                 exposure   222.4 C-min   peak  2.40 C   avail 100.0%   rb  0   -
+  shipped, no rollback       exposure   222.4 C-min   peak  2.40 C   avail 100.0%   rb  0   -
+  shipped + rollback         exposure   221.5 C-min   peak  2.40 C   avail 100.0%   rb  5   -
+  corrected + rollback       exposure     0.5 C-min   peak  0.13 C   avail 100.0%   rb  0   -
+  oracle + rollback          exposure     0.5 C-min   peak  0.13 C   avail 100.0%   rb  0   -
+
+==============================================================================
+E5.  WHAT GOVERNANCE COSTS, AND AUDIT INTEGRITY
+==============================================================================
+  gate evaluation, median     4.50 us shipped     5.20 us corrected
+  gate evaluation, p99        7.40 us shipped     8.70 us corrected
+  rollback decision path    measured separately on the REAL MQTT stack
+                            (median 0.44 ms end-to-end); the twin's own
+                            function-call time is not a meaningful number
+                            and is deliberately not reported.
+  audit chain               verified=True  9761 entries
+
+  The context predicate costs +0.70 us per intent and removes 226 degC-min of
+  unsafe exposure. That ratio, not the absolute latency, is the deployment
+  argument, and it is the opposite of the ratio rollback offers.
+
+==============================================================================
+E6.  REJECTION SEMANTICS BEAT REJECTION ACCURACY
+==============================================================================
+  What should the runtime DO when it says no? A gate that only vetoes is not a
+  controller: the actuator keeps tracking whatever setpoint it already held, and
+  if the context has changed, that setpoint is now wrong too.
+
+  Three fallbacks, applied to the SAME policy, on the SAME trace:
+    hold        keep the current setpoint (a pure filter)
+    checkpoint  revert to the last setpoint that provably held the room in band
+    safe_state  command 21 degC, which lies inside BOTH bands and is therefore
+                safe without knowing which one applies
+
+  oracle / hold              exposure   924.8 C-min   peak  3.95 C   avail 100.0%   rb  6   -
+  oracle / checkpoint        exposure   918.7 C-min   peak  3.95 C   avail 100.0%   rb  5   -
+  oracle / safe_state        exposure     1.2 C-min   peak  0.16 C   avail 100.0%   rb  1   -
+
+  corrected / hold           exposure   734.0 C-min   peak  3.75 C   avail 100.0%   rb  6   -
+  corrected / checkpoint     exposure   727.9 C-min   peak  3.75 C   avail 100.0%   rb  5   -
+  corrected / safe_state     exposure   727.7 C-min   peak  3.81 C   avail 100.0%   rb  5   -
+
+  A PERFECT gate with a naive fallback leaves 925 degC-min.
+  An IMPERFECT gate with a context-safe fallback leaves 728 degC-min.
+  The perfect gate WITH the context-safe fallback leaves 1.2 degC-min.
+
+  So the fallback dominates. An oracle-accurate gate that reverts to a
+  context-blind state is beaten by a far less accurate gate that reverts to a
+  context-independent safe one. This is invisible in a software-only testbed,
+  where restoring a variable is instantaneous and all three fallbacks look the
+  same. It is only visible because the actuator is stateful and the room is slow.
+
+==============================================================================
+E7.  THE ROLLBACK BUDGET DOES NOT BIND HERE, AND SAYING SO MATTERS
+==============================================================================
+  A rollback budget is meant to stop the runtime from undoing the same mistake
+  forever: if it is rolling back every few minutes, the model is systematically
+  wrong, and the honest response is to hand the zone to the fallback thermostat
+  and call a human. We implemented it, and then we checked whether it ever fires.
+
+  shipped, budget=unlimited  exposure   953.2 C-min   peak  3.81 C   avail 100.0%   rb  9   -
+  shipped, budget=10         exposure   953.2 C-min   peak  3.81 C   avail 100.0%   rb  9   -
+  shipped, budget=5          exposure   953.2 C-min   peak  3.81 C   avail 100.0%   rb  9   -
+  shipped, budget=3          exposure   953.2 C-min   peak  3.81 C   avail 100.0%   rb  9   -
+
+  It does not. Every setting gives an identical result, because the shipped
+  policy triggers only 9 rollbacks in 163 hours -- never three within any one
+  hour -- so no budget in this range is ever reached.
+
+  This is worth reporting rather than quietly dropping, for two reasons. First,
+  an earlier version of this experiment DID exhaust the budget and enter
+  FAILED_SAFE within a few hours, which looked like a meaningful safety result. It
+  was not: the monitor had no deadband and was firing rollbacks on 0.01 degC of
+  sensor noise. The budget was measuring a bug in our monitor, not a property of
+  governance. Second, it means the ONLY condition under which this runtime
+  legitimately reaches FAILED_SAFE in our workload is irreversible actuation (E3).
+  A mechanism that never fires is not a contribution, and we do not present it as
+  one.
+
+==============================================================================
+HAL PARITY: THE SAME GOVERNANCE CODE TARGETS THE RASPBERRY PI
+==============================================================================
+  SensorHAL    requires ['close', 'read']
+      SimSensorHAL     IMPLEMENTS ALL
+      PiSensorHAL      IMPLEMENTS ALL
+  ActuatorHAL  requires ['apply_setpoint', 'close', 'enter_failsafe']
+      SimActuatorHAL   IMPLEMENTS ALL
+      PiActuatorHAL    IMPLEMENTS ALL
+
+  The hardware backends are complete and released. They were NOT executed.
+  No Pi, no SCD40, no BME280, no relay, no servo was operated in this study.
+  The hardware evaluation is an interface swap, and it is future work.
+
+==============================================================================
+DONE
+==============================================================================
+  62.5 s
+  results/sil_results.csv   results/SIL_LOG.txt
+  next: python make_figures.py
+
+[2/5] E1-E7 OK  (64 s)
+
+------------------------------------------------------------------------------
+[3/5]  figures   (about 5 s)
+------------------------------------------------------------------------------
+figures written to figures/:
+    fig_sil_1_layers.png
+    fig_sil_2_rollback_latency.png
+    fig_sil_3_fallback.png
+    fig_sil_4_residual.png
+    fig_sil_5_when_rollback_works.png
+
+Every value is read from results/sil_results.json. No figure contains a
+hand-typed number, so no figure can contradict its table.
+
+[3/5] figures OK  (2 s)
+
+------------------------------------------------------------------------------
+[4/5]  E8 sweep   (about 7 min)
+------------------------------------------------------------------------------
+==============================================================================
+WHEN IS RUNTIME ROLLBACK WORTH HAVING?
+==============================================================================
+  host PC-Lab  Windows  python 3.10.20
+
+  Same model, same trace, same policy, same governance code. Two things vary:
+  how fast the plant is, and how often the runtime looks at it.
+
+      tau      slew |      monitor 1s      monitor 5s     monitor 30s
+        h     C/min |  benefit   +-sd  benefit   +-sd  benefit   +-sd
+  --------------------------------------------------------------------
+    0.015      41.4 |    99.0% +- 0.0    95.4% +- 0.1    53.2% +- 0.0
+    0.030      20.7 |    98.9% +- 0.0    43.3% +- 0.1    56.1% +- 0.1
+    0.060      10.4 |    94.8% +- 3.1    95.0% +- 0.1    30.4% +- 0.1
+    0.090       6.9 |    98.3% +- 0.0    96.9% +- 0.1    26.2% +- 0.1
+    0.150       4.1 |    34.5% +- 4.2    33.5% +- 5.3    16.9% +- 0.2
+    0.225       2.8 |    33.2% +- 3.2    29.6% +- 4.0    15.3% +- 0.1
+    0.300       2.1 |    28.7% +- 4.2    24.9% +- 0.8    15.2% +- 0.2
+    0.450       1.4 |     4.8% +- 4.3     2.2% +- 1.4    14.7% +- 0.3
+    0.750       0.8 |     0.9% +- 0.5     1.4% +- 1.2     2.7% +- 2.6
+    1.500       0.4 |     0.3% +- 0.1     0.3% +- 0.1     0.3% +- 0.0
+    3.000       0.2 |     0.2% +- 0.1     0.1% +- 0.1     0.4% +- 0.2
+
+==============================================================================
+WHAT THE SWEEP SAYS
+==============================================================================
+  It is a THRESHOLD, not a gradient. That is the useful part.
+
+    plants slewing at 6.9 degC/min or faster (tau <= 5 min):
+        rollback removes at least 95% of the unsafe exposure
+    plants slewing at 1.4 degC/min or slower (tau >= 27 min):
+        rollback removes at most 4.8%
+
+  The system either wins the race against the next bad command on every cycle
+  or it loses on every cycle; the transition between the two is narrow. Rollback
+  undoes ONE command, and a systematically wrong model simply issues it again on
+  the next cycle, so the runtime has to be able to restore the plant well inside
+  the 60 s between decisions or it never catches up at all.
+
+  A NOTE ON THE RECOVERY-TIME COLUMN. Do not use it as the predictor. It is a
+  median over excursions that DID recover, so on slow plants -- where many
+  excursions never recover before the trace ends -- it is biased low and can even
+  fall as the plant gets slower. The slew rate is the honest independent
+  variable, because it is a property of the plant rather than of the outcome.
+
+  UPPER BOUND -- the plant is too slow. The building in this paper
+  (tau = 3.0 h, 0.21 degC/min) sits far above the threshold:
+  rollback removes 0.1%. Sampling faster does not help, because the
+  bottleneck is the room, not the sensor.
+
+  LOWER BOUND -- the monitor is too slow. On the fastest plants a 30 s monitor is
+  worth a fraction of a 1 s one: the plant leaves the safe band between samples,
+  so the runtime only ever sees the aftermath. Here the bottleneck IS the sensor,
+  and unlike the room it is fixable.
+
+  BEST CASE in this sweep: 99.0% (tau = 1 min, monitor 1 s).
+
+  So the honest claim is not 'rollback does not work'. It is:
+
+      Runtime rollback delivers safety when the plant can be restored faster
+      than the next bad command arrives, and sampled faster than it can leave
+      the safe set. Outside that band it degrades into a bookkeeping mechanism:
+      a correct audit trail and a defined terminal state, but not safety.
+      Safety there has to come from admission control, and admission control is
+      only as good as the policy's estimate of context.
+
+  Every quantity in that criterion is measurable on a real system before any
+  code is written: the actuator's recovery time, the control period, and the
+  monitor's sampling rate.
+
+  516.8 s
+  results/sweep_results.csv   figures/fig_sil_5_when_rollback_works.png
+
+[4/5] E8 sweep OK  (519 s)
+
+------------------------------------------------------------------------------
+[5/5]  E9 audit   (about 2.5 min)
+------------------------------------------------------------------------------
+
+==============================================================================
+0.  DID THE MODEL IN THE PAPER EVEN CONVERGE?
+==============================================================================
+  iterations used: 327 of max 600
+  converged cleanly, no warning
+
+==============================================================================
+1.  DOES THE STORY DEPEND ON THE MODEL?
+==============================================================================
+  If the conclusions only hold for one architecture, they are about that
+  architecture, not about governance.
+
+  mlp32x16                     norb   954.8  rb   953.2 (  0.2%)  corr   727.7  orac    1.2   C1 y C2 y C3 y
+  mlp_converged                norb   954.8  rb   953.2 (  0.2%)  corr   727.7  orac    1.2   C1 y C2 y C3 y
+  mlp_tiny                     norb  1184.8  rb  1182.2 (  0.2%)  corr   971.3  orac    2.0   C1 y C2 y C3 y
+  mlp_big                      norb   801.9  rb   780.4 (  2.7%)  corr   452.0  orac    4.8   C1 y C2 y C3 y
+  ridge                        norb  1760.9  rb  1759.5 (  0.1%)  corr  1259.9  orac    3.3   C1 y C2 y C3 y
+  forest                       norb  1089.5  rb  1081.0 (  0.8%)  corr   938.9  orac    3.9   C1 y C2 y C3 y
+
+==============================================================================
+2.  DOES IT DEPEND ON THE SENSOR-NOISE SEED?
+==============================================================================
+  seed 7                       norb   954.8  rb   953.2 (  0.2%)  corr   727.7  orac    1.2   C1 y C2 y C3 y
+  seed 11                      norb   954.8  rb   951.4 (  0.4%)  corr   726.8  orac    1.5   C1 y C2 y C3 y
+  seed 23                      norb   954.8  rb   953.1 (  0.2%)  corr   727.1  orac    1.6   C1 y C2 y C3 y
+  seed 101                     norb   954.8  rb   954.0 (  0.1%)  corr   727.6  orac    1.0   C1 y C2 y C3 y
+
+==============================================================================
+2b. DOES IT DEPEND ON THE SENSOR-NOISE *LEVEL*?
+==============================================================================
+  Changing the seed re-rolls the same noise. Changing sigma changes how MUCH of it
+  there is, and that is the question a deployment actually asks: our sensor is not
+  your sensor. A cheap thermistor is an order of magnitude noisier than the
+  0.05 degC we assume, and a conclusion that turns on that assumption is not a
+  conclusion.
+
+  The monitor's deadband is DERIVED from sigma (five sigma), not fixed. A fixed
+  0.25 degC deadband at sigma = 0.5 is half a standard deviation -- no deadband at
+  all. The monitor would fire on noise and the rollback count would measure
+  chatter, so the experiment meant to VALIDATE the monitor would have been
+  measuring a bug in it. We made exactly that mistake once; E7's budget was
+  measuring it.
+
+  sigma 0.05 C  deadband 0.25  norb   954.8  rb   953.2 (  0.2%)  corr   727.7  orac    1.2   C1 y C2 y C3 y
+  sigma 0.25 C  deadband 1.25  norb   954.8  rb   951.3 (  0.4%)  corr   728.0  orac    1.8   C1 y C2 y C3 y
+  sigma 0.50 C  deadband 2.50  norb   954.8  rb   954.4 (  0.0%)  corr   728.1  orac    1.8   C1 y C2 y C3 y
+
+  The no-rollback exposures are IDENTICAL across the three noise levels, and
+  they MUST be: the oracle scores the TRUE plant temperature, and no amount of
+  sensor noise changes the truth. What noise can change is the MONITOR's
+  decisions -- and with the deadband tracking sigma, it does not change them
+  enough to move a single claim.
+  This is also the check that would have caught our worst bug. An earlier
+  version added noise by patching the ORACLE, which let sensor noise leak into
+  the ground truth and produced the conclusion that 'sensor noise makes rollback
+  27% more effective'. A result that absurd is a bug report, not a finding. The
+  fix was to give the monitor and the scorer separate eyes, and this experiment
+  is what proves they stayed separate.
+
+==============================================================================
+3.  DOES IT DEPEND ON THE 30-MINUTE GRACE WINDOW?
+==============================================================================
+  We log a grace-free exposure on every run and have never once looked at it.
+  A number you compute and never read is not a safeguard, it is decoration.
+
+  NO grace window:             norb  1339.4  rb  1337.6 (  0.1%)  corr  1109.6  orac   130.1
+                               C1 HOLDS | C2 HOLDS | C3 not applicable (see floor)
+
+  THE FLOOR. Replace the AI service with one that CANNOT be wrong:
+    perfect model, 22/17 setback   grace     0.0   strict   337.0
+    constant 22 C, no setback      grace     0.0   strict     0.0
+    ORACLE GATE, real model        grace     1.2   strict   130.1
+
+  A perfect model scores exactly 0.0 under the grace window, which is what
+  makes the window the right instrument: it counts only what a controller
+  could have avoided. Under strict scoring the same perfect model pays 337 --
+  the ramp cost of the 22/17 SETBACK STRATEGY, which a no-setback controller
+  pays 0 of. The oracle gate's 130.1 sits BELOW even that, so it is not a
+  governance failure. It is the control strategy's bill, and we should not
+  have been charging it to the runtime.
+
+  The grace window forgives the ramp the plant physically cannot skip. Without
+  it every arm carries the same large unavoidable offset, so the ABSOLUTE numbers
+  rise. What matters is whether the ORDERING and the CONCLUSIONS survive.
+
+==============================================================================
+4.  DOES IT DEPEND ON THE ORACLE'S SAFE BANDS?
+==============================================================================
+  The bands (20.0, 25.0) / (15.0, 30.0) degC are a judgement call.
+  If a different reasonable choice reverses the finding, the finding is ours,
+  not the system's.
+
+  occ (20.0, 25.0) vac (15.0, 30.0) norb   954.8  rb   953.2 (  0.2%)  corr   727.7  orac    1.2   C1 y C2 y C3 y
+  occ (19.0, 26.0) vac (14.0, 31.0) norb   389.0  rb   387.0 (  0.5%)  corr   329.5  orac    0.7   C1 y C2 y C3 y
+  occ (21.0, 24.0) vac (16.0, 29.0) norb  1809.6  rb  1801.6 (  0.4%)  corr  1217.7  orac   39.5   C1 y C2 y C3 y
+  occ (20.0, 27.0) vac (15.0, 30.0) norb   800.4  rb   798.9 (  0.2%)  corr   727.7  orac    1.2   C1 y C2 y C3 y
+
+==============================================================================
+5.  IS datatest2 ACTUALLY A DISTRIBUTION SHIFT, OR DID WE JUST SAY SO?
+==============================================================================
+  feature                     train           datatest          datatest2
+  Temperature         20.6 +-    1.0      21.4 +-    1.0      21.0 +-    1.0
+  Humidity            25.7 +-    5.5      25.4 +-    2.4      29.9 +-    4.0
+  CO2                606.5 +-  314.3     717.9 +-  292.7     753.2 +-  297.1
+  HumidityRatio     0.0039 +- 0.0009    0.0040 +- 0.0006    0.0046 +- 0.0005
+
+  occupancy rate: train 21.2%  datatest 36.5%  datatest2 21.0%
+
+  READ THAT LINE AGAIN. datatest2 -- the split we call the DISTRIBUTION SHIFT --
+  has almost exactly the training occupancy rate, while datatest -- the split we
+  call IN-DISTRIBUTION -- is the one that is far from it. So the shift is NOT in
+  the occupancy rate. It is in the FEATURES: humidity and humidity ratio move by
+  0.8 training standard deviations and CO2 by 0.5, which is what breaks a model
+  that has to infer occupancy FROM those features. The naming is conventional --
+  these are the UCI splits as published -- but a reader who checks will find this,
+  and it must be said before they do rather than after.
+  largest mean displacement: HumidityRatio, 0.85 training std devs
+
+==============================================================================
+VERDICT
+==============================================================================
+  C1  rollback buys < 10%            18/18 HOLDS
+  C2  corrected beats shipped        18/18 HOLDS
+  C3  oracle removes ~all of it      18/18 HOLDS
+
+  1366.1 s   results/robustness.json
+
+[5/5] E9 audit OK  (1368 s)
+
+==============================================================================
+WHAT THE PAPER NEEDS
+==============================================================================
+
+E1  unsafe physical exposure under distribution shift (degC-min)
+      ungoverned                 1185.3   peak  3.75   rollbacks 0
+      shipped, no rollback        954.8   peak  3.75   rollbacks 0
+      shipped + rollback          953.2   peak  3.81   rollbacks 9
+      corrected + rollback        727.7   peak  3.81   rollbacks 5
+      oracle + rollback             1.2   peak  0.16   rollbacks 1
+
+      admission control:  1185 -> 955
+      adding rollback:    955 -> 953   = 0.2%   <-- the headline
+
+E8  when rollback is worth having  (1 s monitor, seed-averaged)
+       tau (h)     slew    benefit   spread
+         0.015     41.4      99.0%     0.0
+         0.030     20.7      98.9%     0.0
+         0.060     10.4      94.8%     6.3
+         0.090      6.9      98.3%     0.0
+         0.150      4.1      34.5%     8.3
+         0.225      2.8      33.2%     6.4
+         0.300      2.1      28.7%     8.4
+         0.450      1.4       4.8%     8.7
+         0.750      0.8       0.9%     1.0
+         1.500      0.4       0.3%     0.3
+         3.000      0.2       0.2%     0.1
+
+E9  robustness
+      18 perturbations
+      C1  rollback buys < 10%          18/18 HOLDS
+      C2  corrected beats shipped      18/18 HOLDS
+      C3  oracle removes ~all of it    18/18 HOLDS
+      floor: a perfect model scores 0.0 under the grace window (must be 0.0)
+
+  Send me this block, plus results/RUN_ALL_LOG.txt.
+TOTAL 1954 s
+Transcript: C:\Users\Gee\SIL3\results\RUN_ALL_LOG.txt
