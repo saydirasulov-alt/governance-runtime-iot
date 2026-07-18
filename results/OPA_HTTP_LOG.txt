@@ -1,0 +1,14 @@
+======================================================================
+OPA HTTP decision-point latency
+======================================================================
+host            : PC-Lab
+os              : Windows 10 (AMD64)
+python          : 3.10.20
+opa endpoint    : http://127.0.0.1:8181/v1/data/governance/allow
+opa version     : 1.18.2 (windows/amd64, Rego v1)
+intents (timed) : 240  (admitted 120, rejected 120; warmup 50)
+decision agree  : 240/240  (OPA vs runtime gate logic)
+latency median  : 0.936 ms
+latency P90     : 1.049 ms
+latency mean    : 0.954 ms   (min 0.807, max 1.993)
+csv             : results/opa_http_latency.csv

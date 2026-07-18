@@ -1,0 +1,53 @@
+{
+  "title": "A Closed-Loop Study of Runtime Governance for AI-Driven IoT: reproducibility package",
+  "description": "Software-in-the-loop testbed and deployable governance service for the Sensors paper 'A Closed-Loop Study of Runtime Governance for AI-Driven IoT'. Closes the control loop through a physical plant model and measures which runtime governance mechanism reduces physical risk; the principal result is that admission control removes a substantial fraction of the unsafe exposure while checkpoint rollback removes only a further 0.2%. No physical hardware was operated.",
+  "upload_type": "software",
+  "license": "MIT",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "Saydirasulov Saydirasulovic, Norkobil",
+      "affiliation": "Gachon University, Republic of Korea",
+      "orcid": "0009-0009-3883-9403"
+    },
+    {
+      "name": "Davronbekov, Dilmurod Abdujalilovich",
+      "affiliation": "Tashkent University of Information Technologies, Uzbekistan",
+      "orcid": "0000-0003-1193-7918"
+    },
+    {
+      "name": "Makhmudov, Makhsum Mubashirovich",
+      "affiliation": "UNICON.UZ LLC, Uzbekistan"
+    },
+    {
+      "name": "Cho, Young Im",
+      "affiliation": "Gachon University, Republic of Korea",
+      "orcid": "0000-0003-0184-7599"
+    }
+  ],
+  "keywords": [
+    "IoT runtime governance",
+    "policy-as-code",
+    "admission control",
+    "rollback",
+    "audit traceability",
+    "policy-gap diagnosis",
+    "controlled testbed",
+    "measurement methodology",
+    "reproducibility",
+    "MQTT",
+    "Open Policy Agent",
+    "closed-loop evaluation",
+    "rollback operating envelope",
+    "physical safety",
+    "software-in-the-loop"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/saydirasulov-alt/governance-runtime-iot",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
+  "language": "eng"
+}

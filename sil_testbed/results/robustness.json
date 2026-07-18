@@ -1,0 +1,336 @@
+{
+  "convergence": {
+    "n_iter": 327,
+    "warned": false
+  },
+  "models": {
+    "mlp32x16": {
+      "exposures": {
+        "shipped_norb": 954.8321314592366,
+        "shipped_rb": 953.1634296720871,
+        "corrected_rb": 727.6892525403123,
+        "oracle_rb": 1.2258570833397195
+      },
+      "rollback_gain_pct": 0.2,
+      "C1": true,
+      "C2": true,
+      "C3": true,
+      "train_mae_c": 0.402,
+      "setpoint_range": [
+        16.0,
+        31.9
+      ]
+    },
+    "mlp_converged": {
+      "exposures": {
+        "shipped_norb": 954.8321314592366,
+        "shipped_rb": 953.1634296720871,
+        "corrected_rb": 727.6892525403123,
+        "oracle_rb": 1.2258570833397195
+      },
+      "rollback_gain_pct": 0.2,
+      "C1": true,
+      "C2": true,
+      "C3": true,
+      "train_mae_c": 0.402,
+      "setpoint_range": [
+        16.0,
+        31.9
+      ]
+    },
+    "mlp_tiny": {
+      "exposures": {
+        "shipped_norb": 1184.777332017005,
+        "shipped_rb": 1182.204167304995,
+        "corrected_rb": 971.252833641961,
+        "oracle_rb": 2.009868703865234
+      },
+      "rollback_gain_pct": 0.2,
+      "C1": true,
+      "C2": true,
+      "C3": true,
+      "train_mae_c": 0.563,
+      "setpoint_range": [
+        15.2,
+        25.7
+      ]
+    },
+    "mlp_big": {
+      "exposures": {
+        "shipped_norb": 801.9121589407861,
+        "shipped_rb": 780.3790937955383,
+        "corrected_rb": 452.03572372842825,
+        "oracle_rb": 4.816857236535118
+      },
+      "rollback_gain_pct": 2.7,
+      "C1": true,
+      "C2": true,
+      "C3": true,
+      "train_mae_c": 0.314,
+      "setpoint_range": [
+        14.7,
+        37.7
+      ]
+    },
+    "ridge": {
+      "exposures": {
+        "shipped_norb": 1760.916224705592,
+        "shipped_rb": 1759.5170612786978,
+        "corrected_rb": 1259.9281690155967,
+        "oracle_rb": 3.316268772093906
+      },
+      "rollback_gain_pct": 0.1,
+      "C1": true,
+      "C2": true,
+      "C3": true,
+      "train_mae_c": 0.803,
+      "setpoint_range": [
+        16.4,
+        24.3
+      ]
+    },
+    "forest": {
+      "exposures": {
+        "shipped_norb": 1089.5451251493841,
+        "shipped_rb": 1080.9670987937996,
+        "corrected_rb": 938.8750691103852,
+        "oracle_rb": 3.9237075576217713
+      },
+      "rollback_gain_pct": 0.8,
+      "C1": true,
+      "C2": true,
+      "C3": true,
+      "train_mae_c": 0.036,
+      "setpoint_range": [
+        17.0,
+        22.0
+      ]
+    }
+  },
+  "seeds": {
+    "7": {
+      "exposures": {
+        "shipped_norb": 954.8321314592366,
+        "shipped_rb": 953.1634296720871,
+        "corrected_rb": 727.6892525403123,
+        "oracle_rb": 1.2258570833397195
+      },
+      "rollback_gain_pct": 0.2,
+      "C1": true,
+      "C2": true,
+      "C3": true
+    },
+    "11": {
+      "exposures": {
+        "shipped_norb": 954.8321314592366,
+        "shipped_rb": 951.4430845927927,
+        "corrected_rb": 726.816514008744,
+        "oracle_rb": 1.4622836369423184
+      },
+      "rollback_gain_pct": 0.4,
+      "C1": true,
+      "C2": true,
+      "C3": true
+    },
+    "23": {
+      "exposures": {
+        "shipped_norb": 954.8321314592366,
+        "shipped_rb": 953.1247008856053,
+        "corrected_rb": 727.1471063772683,
+        "oracle_rb": 1.5696466089639487
+      },
+      "rollback_gain_pct": 0.2,
+      "C1": true,
+      "C2": true,
+      "C3": true
+    },
+    "101": {
+      "exposures": {
+        "shipped_norb": 954.8321314592366,
+        "shipped_rb": 953.987990261843,
+        "corrected_rb": 727.5870108477602,
+        "oracle_rb": 1.0123589947780844
+      },
+      "rollback_gain_pct": 0.1,
+      "C1": true,
+      "C2": true,
+      "C3": true
+    }
+  },
+  "noise_levels": {
+    "0.05": {
+      "exposures": {
+        "shipped_norb": 954.8321314592366,
+        "shipped_rb": 953.1634296720871,
+        "corrected_rb": 727.6892525403123,
+        "oracle_rb": 1.2258570833397195
+      },
+      "rollback_gain_pct": 0.2,
+      "C1": true,
+      "C2": true,
+      "C3": true,
+      "sigma_t_c": 0.05,
+      "deadband_c": 0.25
+    },
+    "0.25": {
+      "exposures": {
+        "shipped_norb": 954.8321314592366,
+        "shipped_rb": 951.2577354002025,
+        "corrected_rb": 728.0480089368598,
+        "oracle_rb": 1.8192130124534573
+      },
+      "rollback_gain_pct": 0.4,
+      "C1": true,
+      "C2": true,
+      "C3": true,
+      "sigma_t_c": 0.25,
+      "deadband_c": 1.25
+    },
+    "0.50": {
+      "exposures": {
+        "shipped_norb": 954.8321314592366,
+        "shipped_rb": 954.3550546013083,
+        "corrected_rb": 728.0850833963178,
+        "oracle_rb": 1.8192130124534573
+      },
+      "rollback_gain_pct": 0.0,
+      "C1": true,
+      "C2": true,
+      "C3": true,
+      "sigma_t_c": 0.5,
+      "deadband_c": 2.5
+    }
+  },
+  "floor": {
+    "perfect_model_grace": 0.0,
+    "perfect_model_strict": 337.0,
+    "no_setback_grace": 0.0,
+    "no_setback_strict": 0.0
+  },
+  "strict_no_grace": {
+    "exposures": {
+      "shipped_norb": 1339.4,
+      "shipped_rb": 1337.6,
+      "corrected_rb": 1109.6,
+      "oracle_rb": 130.1
+    },
+    "rollback_gain_pct": 0.1,
+    "C1": true,
+    "C2": true,
+    "C3": false
+  },
+  "bands": {
+    "(20.0, 25.0)/(15.0, 30.0)": {
+      "exposures": {
+        "shipped_norb": 954.8321314592366,
+        "shipped_rb": 953.1634296720871,
+        "corrected_rb": 727.6892525403123,
+        "oracle_rb": 1.2258570833397195
+      },
+      "rollback_gain_pct": 0.2,
+      "C1": true,
+      "C2": true,
+      "C3": true
+    },
+    "(19.0, 26.0)/(14.0, 31.0)": {
+      "exposures": {
+        "shipped_norb": 388.9668669409192,
+        "shipped_rb": 387.04940546410353,
+        "corrected_rb": 329.4956068215905,
+        "oracle_rb": 0.6808407216617072
+      },
+      "rollback_gain_pct": 0.5,
+      "C1": true,
+      "C2": true,
+      "C3": true
+    },
+    "(21.0, 24.0)/(16.0, 29.0)": {
+      "exposures": {
+        "shipped_norb": 1809.5780736335685,
+        "shipped_rb": 1801.6117930753642,
+        "corrected_rb": 1217.6878032904604,
+        "oracle_rb": 39.53951621551946
+      },
+      "rollback_gain_pct": 0.4,
+      "C1": true,
+      "C2": true,
+      "C3": true
+    },
+    "(20.0, 27.0)/(15.0, 30.0)": {
+      "exposures": {
+        "shipped_norb": 800.4463452106293,
+        "shipped_rb": 798.932842742523,
+        "corrected_rb": 727.6892525403134,
+        "oracle_rb": 1.2258570833397195
+      },
+      "rollback_gain_pct": 0.2,
+      "C1": true,
+      "C2": true,
+      "C3": true
+    }
+  },
+  "shift": {
+    "Temperature": {
+      "train_mean": 20.62,
+      "datatest_mean": 21.43,
+      "datatest2_mean": 21.0,
+      "std_devs_from_train": 0.38
+    },
+    "Humidity": {
+      "train_mean": 25.73,
+      "datatest_mean": 25.35,
+      "datatest2_mean": 29.89,
+      "std_devs_from_train": 0.75
+    },
+    "CO2": {
+      "train_mean": 606.55,
+      "datatest_mean": 717.91,
+      "datatest2_mean": 753.22,
+      "std_devs_from_train": 0.47
+    },
+    "HumidityRatio": {
+      "train_mean": 0.0,
+      "datatest_mean": 0.0,
+      "datatest2_mean": 0.0,
+      "std_devs_from_train": 0.85
+    }
+  },
+  "verdict": {
+    "n_perturbations": 18,
+    "perturbations": [
+      "models/mlp32x16",
+      "models/mlp_converged",
+      "models/mlp_tiny",
+      "models/mlp_big",
+      "models/ridge",
+      "models/forest",
+      "seeds/7",
+      "seeds/11",
+      "seeds/23",
+      "seeds/101",
+      "noise_levels/0.05",
+      "noise_levels/0.25",
+      "noise_levels/0.50",
+      "bands/(20.0, 25.0)/(15.0, 30.0)",
+      "bands/(19.0, 26.0)/(14.0, 31.0)",
+      "bands/(21.0, 24.0)/(16.0, 29.0)",
+      "bands/(20.0, 27.0)/(15.0, 30.0)",
+      "strict_no_grace"
+    ],
+    "C1": {
+      "passed": 18,
+      "total": 18,
+      "fails": []
+    },
+    "C2": {
+      "passed": 18,
+      "total": 18,
+      "fails": []
+    },
+    "C3": {
+      "passed": 18,
+      "total": 18,
+      "fails": []
+    }
+  }
+}
