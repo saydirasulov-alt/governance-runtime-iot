@@ -1,4 +1,4 @@
-# A Closed-Loop Study of Runtime Governance for AI-Driven IoT
+# A Closed-Loop Measurement Study of Runtime Governance for AI-Driven IoT
 
 [![Tests](https://github.com/saydirasulov-alt/governance-runtime-iot/actions/workflows/ci.yml/badge.svg)](https://github.com/saydirasulov-alt/governance-runtime-iot/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -6,7 +6,7 @@
 
 Reproducibility package and deployable reference service for:
 
-> **A Closed-Loop Study of Runtime Governance for AI-Driven IoT**
+> **A Closed-Loop Measurement Study of Runtime Governance for AI-Driven IoT**
 > N. Saydirasulov Saydirasulovic, D. A. Davronbekov, M. M. Makhmudov, Y. I. Cho. *Sensors* (MDPI).
 
 Runtime governance for AI-driven IoT is usually presented as a stack of mechanisms, namely admission
