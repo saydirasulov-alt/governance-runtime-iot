@@ -1,6 +1,6 @@
 """Automated policy-gap finder for IoT actuation governance (Path A prototype).
 
-Answers Reviewer 3 directly: instead of a human hand-injecting one policy omission,
+Instead of a human hand-injecting one policy omission,
 this tool AUTOMATICALLY discovers governance-policy configurations (and conditions in
 the SHIPPED policy) that admit physically-unsafe control intents. It combines three
 established techniques in a new domain -- physical-actuation safety policies:

@@ -351,7 +351,7 @@ def main():
     # The verdict is computed HERE, written into robustness.json, and read from there by
     # everyone else. It used to be recomputed independently by run_all.py over a different
     # set of groups, so a single run printed 15/15 in one place and 14/14 in another. Two
-    # numbers for one fact is how a paper acquires a contradiction that a reviewer finds
+    # numbers for one fact is how a paper acquires a contradiction that a reader finds
     # before its authors do. There is now one number, and it has one source.
     hr("VERDICT")
     checks = []

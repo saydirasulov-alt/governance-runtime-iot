@@ -11,9 +11,8 @@ plant MODEL. We have the latter: real governance code, real recorded sensor data
 learned model, and a simulated room. No physical hardware was operated.
 
 We called this "HIL" throughout its development, in filenames, in banners, and in prose. It
-was wrong, and it was wrong in the direction that flatters us -- a reviewer from the
-cyber-physical community would have read it as an overclaim, which is precisely the charge
-the paper is trying to answer. The Raspberry Pi backend in gsim/hal.py is the HIL rung; it
+was wrong, and it was wrong in the direction that flatters us -- the cyber-physical
+community would read it as an overclaim. The Raspberry Pi backend in gsim/hal.py is the HIL rung; it
 is released, parity-checked, and NOT RUN.
 
 Scope, stated once and honestly: no physical hardware was operated in this study.

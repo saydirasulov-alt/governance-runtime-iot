@@ -1,7 +1,7 @@
 {
   "host": "PC-Lab",
   "os": "Windows",
-  "python": "3.10.20",
+  "python": "3.13.13",
   "control_period_s": 60,
   "model": {
     "n_train": 8143,

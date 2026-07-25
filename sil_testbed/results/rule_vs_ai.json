@@ -1,0 +1,68 @@
+[
+  {
+    "regime": "in-distribution",
+    "controller": "mlp",
+    "unsafe_exposure_c_min": 221.5,
+    "peak_excursion_c": 2.4,
+    "setback_pct": 21.7,
+    "heating_kwh": 27.7,
+    "rollbacks": 5,
+    "admitted": 2665,
+    "rejected": 0
+  },
+  {
+    "regime": "in-distribution",
+    "controller": "rule_co2",
+    "unsafe_exposure_c_min": 200.4,
+    "peak_excursion_c": 3.05,
+    "setback_pct": 62.5,
+    "heating_kwh": 23.4,
+    "rollbacks": 2,
+    "admitted": 2665,
+    "rejected": 0
+  },
+  {
+    "regime": "in-distribution",
+    "controller": "const22",
+    "unsafe_exposure_c_min": 0.0,
+    "peak_excursion_c": 0.0,
+    "setback_pct": 0.0,
+    "heating_kwh": 38.8,
+    "rollbacks": 0,
+    "admitted": 2665,
+    "rejected": 0
+  },
+  {
+    "regime": "shift",
+    "controller": "mlp",
+    "unsafe_exposure_c_min": 953.2,
+    "peak_excursion_c": 3.81,
+    "setback_pct": 10.3,
+    "heating_kwh": 115.6,
+    "rollbacks": 9,
+    "admitted": 9446,
+    "rejected": 306
+  },
+  {
+    "regime": "shift",
+    "controller": "rule_co2",
+    "unsafe_exposure_c_min": 1427.7,
+    "peak_excursion_c": 3.45,
+    "setback_pct": 67.6,
+    "heating_kwh": 83.6,
+    "rollbacks": 7,
+    "admitted": 9752,
+    "rejected": 0
+  },
+  {
+    "regime": "shift",
+    "controller": "const22",
+    "unsafe_exposure_c_min": 0.0,
+    "peak_excursion_c": 0.0,
+    "setback_pct": 0.0,
+    "heating_kwh": 144.7,
+    "rollbacks": 0,
+    "admitted": 9752,
+    "rejected": 0
+  }
+]

@@ -7,7 +7,7 @@ the physical-plant integration -- on this machine, in one command.
 
 Takes about 10 minutes. Writes results/REPRODUCTION_LOG.txt recording the host, the Python
 version, every script run, its wall-clock time, and the key values it produced, so that an
-independent re-run by a co-author or a reviewer leaves an auditable record.
+independent re-run leaves an auditable record.
 
 The headline closed-loop result (rollback = 0.2%), the plant sweep and the robustness audit
 are reproduced separately by   python sil_testbed/run_all.py   (writes RUN_ALL_LOG.txt).

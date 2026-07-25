@@ -154,8 +154,7 @@ def main() -> None:
     orac = rows[4]
     d_rb = noreb["unsafe_exposure_c_min"] - ship["unsafe_exposure_c_min"]
     pct_rb = 100 * d_rb / max(1e-9, noreb["unsafe_exposure_c_min"])
-    print(f"\n  Read the third and fourth columns together, because they do not say what")
-    print(f"  the earlier version of this paper assumed they would.")
+    print(f"\n  Read the third and fourth columns together.")
     print(f"\n  Admission control alone:  {ung['unsafe_exposure_c_min']:.0f} -> "
           f"{noreb['unsafe_exposure_c_min']:.0f} degC-min.")
     print(f"  Adding ROLLBACK:         {noreb['unsafe_exposure_c_min']:.0f} -> "
@@ -201,9 +200,8 @@ def main() -> None:
             print(f"  physical recovery, worst  {mx:7.0f} s  ({mx/60:.1f} min)")
             print("\n  For contrast, the governance DECISION path was measured on the real MQTT")
             print("  stack at a median of 0.44 ms. The decision is six orders of magnitude faster")
-            print("  than its own physical consequence. Reporting only the decision latency, as")
-            print("  the previous version of this paper did, describes the cheap half of rollback")
-            print("  and silently omits the expensive half.")
+            print("  than its own physical consequence. Reporting only the decision latency")
+            print("  would describe the cheap half of rollback and omit the expensive half.")
         print(f"\n  Rollback is fast to DECIDE and slow to TAKE EFFECT,")
         print(f"  because rooms have thermal mass. Rollback ENDS an excursion; it does not")
         print(f"  undo it. The {ship['unsafe_exposure_c_min']:.0f} degC-min still on the clock "
@@ -313,7 +311,7 @@ def main() -> None:
           f"three within any one")
     print(f"  hour -- so no budget in this range is ever reached.")
     print("\n  This is worth reporting rather than quietly dropping, for two reasons. First,")
-    print("  an earlier version of this experiment DID exhaust the budget and enter")
+    print("  a mis-tuned variant of this experiment CAN exhaust the budget and enter")
     print("  FAILED_SAFE within a few hours, which looked like a meaningful safety result. It")
     print("  was not: the monitor had no deadband and was firing rollbacks on 0.01 degC of")
     print("  sensor noise. The budget was measuring a bug in our monitor, not a property of")

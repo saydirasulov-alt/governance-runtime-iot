@@ -274,7 +274,7 @@ def test_parity_report_says_what_it_means():
     """
     REGRESSION, and the sharpest one.
 
-    parity_report() is what we hand the reviewer to show that "the same governance code
+    parity_report() is what shows that "the same governance code
     runs on hardware" is a checkable fact. It was checking `__isabstractmethod__` with a
     default of True, so every correctly implemented method came back as MISSING and the
     report declared all four backends broken -- while the classes were, in fact, complete.

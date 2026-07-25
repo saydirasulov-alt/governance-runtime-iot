@@ -1,8 +1,8 @@
 """
 Hardware abstraction layer.
 
-This is the most important file in the prototype for answering the reviewer, and it is
-worth saying plainly why.
+This is the most important file in the prototype for the hardware-parity claim, and it
+is worth saying plainly why.
 
 The objection is that software results "cannot be transferred to a realistic
 deployment". The wrong answer is to pretend the simulation is a deployment. The right
@@ -314,9 +314,9 @@ def _is_concrete(cls, name: str) -> bool:
     default must be False. We had it as True, and parity_report() therefore declared all
     four backends broken while the classes were in fact complete.
 
-    This mattered more than a cosmetic bug. parity_report() is the thing we point the
-    reviewer at to show that "the same governance code runs on hardware" is mechanically
-    checkable rather than asserted. The checker itself was wrong. The unit test did not
+    This mattered more than a cosmetic bug. parity_report() is what makes the claim that
+    "the same governance code runs on hardware" mechanically checkable rather than
+    asserted. The checker itself was wrong. The unit test did not
     catch it because the test re-implemented the check correctly and inspected the
     CLASSES; nobody was testing the REPORTER. test_parity_report_says_what_it_means now
     does, so the claim and the thing that verifies the claim can no longer drift apart.

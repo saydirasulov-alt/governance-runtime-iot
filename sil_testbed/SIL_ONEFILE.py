@@ -317,8 +317,8 @@ class SafetyOracle:
 """
 Hardware abstraction layer.
 
-This is the most important file in the prototype for answering the reviewer, and it is
-worth saying plainly why.
+This is the most important file in the prototype for the hardware-parity claim, and it
+is worth saying plainly why.
 
 The objection is that software results "cannot be transferred to a realistic
 deployment". The wrong answer is to pretend the simulation is a deployment. The right
@@ -628,9 +628,9 @@ def _is_concrete(cls, name: str) -> bool:
     default must be False. We had it as True, and parity_report() therefore declared all
     four backends broken while the classes were in fact complete.
 
-    This mattered more than a cosmetic bug. parity_report() is the thing we point the
-    reviewer at to show that "the same governance code runs on hardware" is mechanically
-    checkable rather than asserted. The checker itself was wrong. The unit test did not
+    This mattered more than a cosmetic bug. parity_report() is what makes the claim that
+    "the same governance code runs on hardware" mechanically checkable rather than
+    asserted. The checker itself was wrong. The unit test did not
     catch it because the test re-implemented the check correctly and inspected the
     CLASSES; nobody was testing the REPORTER. test_parity_report_says_what_it_means now
     does, so the claim and the thing that verifies the claim can no longer drift apart.
@@ -1026,8 +1026,8 @@ The governed control loop.
                                                       |
                                      rollback  ->  budget  ->  FAILED_SAFE
 
-The actuation loop is closed through the physics. That is the loop the reviewer is
-asking about, and it is the one that produces the paper's new numbers.
+The actuation loop is closed through the physics; it is the loop that produces the
+paper's closed-loop numbers.
 
 Three mechanisms, and the experiments exist to separate them:
 
@@ -1545,8 +1545,7 @@ def main() -> None:
     orac = rows[4]
     d_rb = noreb["unsafe_exposure_c_min"] - ship["unsafe_exposure_c_min"]
     pct_rb = 100 * d_rb / max(1e-9, noreb["unsafe_exposure_c_min"])
-    print(f"\n  Read the third and fourth columns together, because they do not say what")
-    print(f"  the earlier version of this paper assumed they would.")
+    print(f"\n  Read the third and fourth columns together.")
     print(f"\n  Admission control alone:  {ung['unsafe_exposure_c_min']:.0f} -> "
           f"{noreb['unsafe_exposure_c_min']:.0f} degC-min.")
     print(f"  Adding ROLLBACK:         {noreb['unsafe_exposure_c_min']:.0f} -> "
@@ -1592,9 +1591,8 @@ def main() -> None:
             print(f"  physical recovery, worst  {mx:7.0f} s  ({mx/60:.1f} min)")
             print("\n  For contrast, the governance DECISION path was measured on the real MQTT")
             print("  stack at a median of 0.44 ms. The decision is six orders of magnitude faster")
-            print("  than its own physical consequence. Reporting only the decision latency, as")
-            print("  the previous version of this paper did, describes the cheap half of rollback")
-            print("  and silently omits the expensive half.")
+            print("  than its own physical consequence. Reporting only the decision latency")
+            print("  would describe the cheap half of rollback and omit the expensive half.")
         print(f"\n  Rollback is fast to DECIDE and slow to TAKE EFFECT,")
         print(f"  because rooms have thermal mass. Rollback ENDS an excursion; it does not")
         print(f"  undo it. The {ship['unsafe_exposure_c_min']:.0f} degC-min still on the clock "
@@ -1704,7 +1702,7 @@ def main() -> None:
           f"three within any one")
     print(f"  hour -- so no budget in this range is ever reached.")
     print("\n  This is worth reporting rather than quietly dropping, for two reasons. First,")
-    print("  an earlier version of this experiment DID exhaust the budget and enter")
+    print("  a mis-tuned variant of this experiment CAN exhaust the budget and enter")
     print("  FAILED_SAFE within a few hours, which looked like a meaningful safety result. It")
     print("  was not: the monitor had no deadband and was firing rollbacks on 0.01 degC of")
     print("  sensor noise. The budget was measuring a bug in our monitor, not a property of")

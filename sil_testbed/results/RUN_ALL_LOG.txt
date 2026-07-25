@@ -2,9 +2,9 @@
 RUN ALL
 ==============================================================================
   host    PC-Lab
-  os      Windows 10
-  python  3.10.20
-  cwd     C:\Users\Gee\SIL3
+  os      Windows 11
+  python  3.13.13
+  cwd     C:\Users\Gee\Documents\GitHub\governance-runtime-iot\sil_testbed
 
   No physical hardware is operated. Every physical quantity below is produced by
   the digital twin, whose model and parameters are given in full in gsim/plant.py.
@@ -13,7 +13,7 @@ RUN ALL
 [1/5]  tests   (about 5 s)
 ------------------------------------------------------------------------------
 .........................                                                [100%]
-25 passed in 1.63s
+25 passed in 1.49s
 
 [1/5] tests OK  (2 s)
 
@@ -24,7 +24,7 @@ RUN ALL
 ==============================================================================
 SOFTWARE-IN-THE-LOOP (SIL) GOVERNANCE TESTBED
 ==============================================================================
-  host   PC-Lab   Windows 10   python 3.10.20
+  host   PC-Lab   Windows 11   python 3.13.13
   plant  single-zone RC thermal digital twin
   NOTE   no physical hardware was operated; all physical values are twin values
 
@@ -64,8 +64,7 @@ E1.  CLOSED-LOOP SAFETY UNDER DISTRIBUTION SHIFT
   corrected + rollback       exposure   727.7 C-min   peak  3.81 C   avail 100.0%   rb  5   -
   oracle + rollback          exposure     1.2 C-min   peak  0.16 C   avail 100.0%   rb  1   -
 
-  Read the third and fourth columns together, because they do not say what
-  the earlier version of this paper assumed they would.
+  Read the third and fourth columns together.
 
   Admission control alone:  1185 -> 955 degC-min.
   Adding ROLLBACK:         955 -> 953 degC-min.  That is 0.2%.
@@ -108,9 +107,8 @@ E2.  WHAT ROLLBACK ACTUALLY BUYS  (the number the paper says it does not measure
 
   For contrast, the governance DECISION path was measured on the real MQTT
   stack at a median of 0.44 ms. The decision is six orders of magnitude faster
-  than its own physical consequence. Reporting only the decision latency, as
-  the previous version of this paper did, describes the cheap half of rollback
-  and silently omits the expensive half.
+  than its own physical consequence. Reporting only the decision latency
+  would describe the cheap half of rollback and omit the expensive half.
 
   Rollback is fast to DECIDE and slow to TAKE EFFECT,
   because rooms have thermal mass. Rollback ENDS an excursion; it does not
@@ -151,15 +149,15 @@ E4.  THE SAME EXPERIMENT IN-DISTRIBUTION
 ==============================================================================
 E5.  WHAT GOVERNANCE COSTS, AND AUDIT INTEGRITY
 ==============================================================================
-  gate evaluation, median     4.50 us shipped     5.20 us corrected
-  gate evaluation, p99        7.40 us shipped     8.70 us corrected
+  gate evaluation, median     3.30 us shipped     3.80 us corrected
+  gate evaluation, p99        5.10 us shipped     6.10 us corrected
   rollback decision path    measured separately on the REAL MQTT stack
                             (median 0.44 ms end-to-end); the twin's own
                             function-call time is not a meaningful number
                             and is deliberately not reported.
   audit chain               verified=True  9761 entries
 
-  The context predicate costs +0.70 us per intent and removes 226 degC-min of
+  The context predicate costs +0.50 us per intent and removes 226 degC-min of
   unsafe exposure. That ratio, not the absolute latency, is the deployment
   argument, and it is the opposite of the ratio rollback offers.
 
@@ -212,7 +210,7 @@ E7.  THE ROLLBACK BUDGET DOES NOT BIND HERE, AND SAYING SO MATTERS
   hour -- so no budget in this range is ever reached.
 
   This is worth reporting rather than quietly dropping, for two reasons. First,
-  an earlier version of this experiment DID exhaust the budget and enter
+  a mis-tuned variant of this experiment CAN exhaust the budget and enter
   FAILED_SAFE within a few hours, which looked like a meaningful safety result. It
   was not: the monitor had no deadband and was firing rollbacks on 0.01 degC of
   sensor noise. The budget was measuring a bug in our monitor, not a property of
@@ -238,11 +236,11 @@ HAL PARITY: THE SAME GOVERNANCE CODE TARGETS THE RASPBERRY PI
 ==============================================================================
 DONE
 ==============================================================================
-  62.5 s
+  61.4 s
   results/sil_results.csv   results/SIL_LOG.txt
   next: python make_figures.py
 
-[2/5] E1-E7 OK  (64 s)
+[2/5] E1-E7 OK  (63 s)
 
 ------------------------------------------------------------------------------
 [3/5]  figures   (about 5 s)
@@ -260,12 +258,12 @@ hand-typed number, so no figure can contradict its table.
 [3/5] figures OK  (2 s)
 
 ------------------------------------------------------------------------------
-[4/5]  E8 sweep   (about 7 min)
+[4/5]  E8 sweep   (about 9 min)
 ------------------------------------------------------------------------------
 ==============================================================================
 WHEN IS RUNTIME ROLLBACK WORTH HAVING?
 ==============================================================================
-  host PC-Lab  Windows  python 3.10.20
+  host PC-Lab  Windows  python 3.13.13
 
   Same model, same trace, same policy, same governance code. Two things vary:
   how fast the plant is, and how often the runtime looks at it.
@@ -332,13 +330,13 @@ WHAT THE SWEEP SAYS
   code is written: the actuator's recovery time, the control period, and the
   monitor's sampling rate.
 
-  516.8 s
+  415.6 s
   results/sweep_results.csv   figures/fig_sil_5_when_rollback_works.png
 
-[4/5] E8 sweep OK  (519 s)
+[4/5] E8 sweep OK  (418 s)
 
 ------------------------------------------------------------------------------
-[5/5]  E9 audit   (about 2.5 min)
+[5/5]  E9 audit   (about 23 min)
 ------------------------------------------------------------------------------
 
 ==============================================================================
@@ -466,9 +464,9 @@ VERDICT
   C2  corrected beats shipped        18/18 HOLDS
   C3  oracle removes ~all of it      18/18 HOLDS
 
-  1366.1 s   results/robustness.json
+  826.7 s   results/robustness.json
 
-[5/5] E9 audit OK  (1368 s)
+[5/5] E9 audit OK  (828 s)
 
 ==============================================================================
 WHAT THE PAPER NEEDS
@@ -506,5 +504,5 @@ E9  robustness
       floor: a perfect model scores 0.0 under the grace window (must be 0.0)
 
   Send me this block, plus results/RUN_ALL_LOG.txt.
-TOTAL 1954 s
-Transcript: C:\Users\Gee\SIL3\results\RUN_ALL_LOG.txt
+TOTAL 1313 s
+Transcript: C:\Users\Gee\Documents\GitHub\governance-runtime-iot\sil_testbed\results\RUN_ALL_LOG.txt

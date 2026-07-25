@@ -72,6 +72,7 @@ building the testbed).
 |---|---|
 | Closed-loop safety, rollback = 0.2% (the principal result) | `sil_testbed/run_sil.py` |
 | The rollback operating-envelope criterion (95% / 4.8%) | `sil_testbed/run_sweep.py` |
+| Learned vs. deterministic rule-based control under identical governance (Sec. 8.5, Table 16) | `sil_testbed/experiments/rule_vs_ai_baseline.py` |
 | Robustness audit, 18/18 across models/seeds/noise/bands | `sil_testbed/run_robustness.py` |
 | Real learned model on real UCI data, training + generalization | `sil_testbed/full_training.py`, `real_ai_governance.py` |
 | Tier 3 prototype: same gates on a real MQTT stack, in-process decision point (0.44 ms) | `run_governance_demo.py` |

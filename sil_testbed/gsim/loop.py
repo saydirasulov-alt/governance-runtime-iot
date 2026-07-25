@@ -17,8 +17,8 @@ The governed control loop.
                                                       |
                                      rollback  ->  budget  ->  FAILED_SAFE
 
-The actuation loop is closed through the physics. That is the loop the reviewer is
-asking about, and it is the one that produces the paper's new numbers.
+The actuation loop is closed through the physics; it is the loop that produces the
+paper's closed-loop numbers.
 
 Three mechanisms, and the experiments exist to separate them:
 

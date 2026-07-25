@@ -36,7 +36,7 @@ git push -u origin main
 ```
 
 ## 5. After publishing
-- Make the repository Public so reviewers can access it.
+- Make the repository Public so it is openly accessible.
 - Replace the placeholder URL in the manuscript's Data Availability Statement
   with your real repository URL.
 - (Recommended) Connect the repo to Zenodo and create a release to obtain a DOI.

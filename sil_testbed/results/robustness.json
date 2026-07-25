@@ -57,10 +57,10 @@
     },
     "mlp_big": {
       "exposures": {
-        "shipped_norb": 801.9121589407861,
-        "shipped_rb": 780.3790937955383,
-        "corrected_rb": 452.03572372842825,
-        "oracle_rb": 4.816857236535118
+        "shipped_norb": 801.9121589407933,
+        "shipped_rb": 780.3790937955448,
+        "corrected_rb": 452.03572372842865,
+        "oracle_rb": 4.816857236534948
       },
       "rollback_gain_pct": 2.7,
       "C1": true,

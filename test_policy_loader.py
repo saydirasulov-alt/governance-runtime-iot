@@ -2,7 +2,7 @@
 
 Run from the repo root:  python3 test_policy_loader.py
 
-Demonstrates, against reviewer concern (governance policy 'only definable by
+Demonstrates (against the concern that governance policy is 'only definable by
 direct modification of Python source code'):
   1. Gates load from an external YAML/JSON file, not hardcoded Python.
   2. The default config is byte-for-byte equivalent to the legacy gates

@@ -2,7 +2,7 @@
 When is runtime rollback worth having?
 
 The headline result of the main study -- rollback recovers essentially none of the
-unsafe exposure -- is true OF OUR PLANT, and a careful reviewer will immediately ask the
+unsafe exposure -- is true OF OUR PLANT, and a careful reader will immediately ask the
 right question: what if the plant were faster? A room with a three-hour time constant is
 not a valve, a fan, or a robot arm. If physical recovery took seconds instead of an
 hour, rollback would surely work. Stated as a fact about governance, our result would be
