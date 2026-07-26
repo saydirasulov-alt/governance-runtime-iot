@@ -1,4 +1,4 @@
-"""
+﻿"""
 verify_paper_numbers.py -- regenerate every host-independent number reported in the
 manuscript and check it against the expected value. One command, one scoreboard.
 
@@ -43,7 +43,7 @@ def check_int(name, got, want): check(name, got, want, tol=0.0)
 
 
 class Perfect:
-    """Ground-truth-occupancy controller: the floor of Sec. 9.1."""
+    """Ground-truth-occupancy controller: the floor of Sec. 10.1."""
     def __init__(self, trace): self.t, self.i = trace, 0
     def predict(self, *_):
         occ = self.t[min(self.i, len(self.t) - 1)][4]; self.i += 1
@@ -103,7 +103,7 @@ def main():
         if irrev is not None: kw["irreversible_above_c"] = irrev
         return run_closed_loop(ctrl, tr, pol, arm="verify", **kw)
 
-    print("=" * 78); print("E1. CLOSED-LOOP UNDER SHIFT  (Table 12)"); print("=" * 78)
+    print("=" * 78); print("E1. CLOSED-LOOP UNDER SHIFT  (Table 14)"); print("=" * 78)
     exp = [("ungoverned", OPEN, False, 1185.3, 3.75, 0),
            ("shipped no-rb", shipped, False, 954.8, 3.75, 0),
            ("shipped +rb", shipped, True, 953.2, 3.81, 9),
@@ -145,7 +145,7 @@ def main():
             check(f"T16 {reg}/{cn} heating kWh", kwh(r), kw_)
             if rej is not None: check_int(f"T16 {reg}/{cn} rejected", r.rejected, rej)
 
-    print("=" * 78); print("E6. REJECTION SEMANTICS  (Table 15)"); print("=" * 78)
+    print("=" * 78); print("E6. REJECTION SEMANTICS  (Table 17)"); print("=" * 78)
     for pol, pn, vals in [(oracle, "oracle", {"hold": 924.8, "checkpoint": 918.7, "safe_state": 1.2}),
                           (corrected, "corrected", {"hold": 734.0, "checkpoint": 727.9, "safe_state": 727.7})]:
         for fb, e in vals.items():
@@ -165,7 +165,7 @@ def main():
         check(f"E7 budget={b} exposure", r.unsafe_exposure_c_min, 953.2)
         check_int(f"E7 budget={b} rollbacks", r.rollbacks, 9)
 
-    print("=" * 78); print("FLOOR  (Table 17)"); print("=" * 78)
+    print("=" * 78); print("FLOOR  (Table 20)"); print("=" * 78)
     rp = run(Perfect(tr_sh), tr_sh, OPEN, rb=False)
     check("floor perfect grace", rp.unsafe_exposure_c_min, 0.0, 0.05)
     check("floor perfect strict", rp.strict_exposure_c_min, 337.0, 0.5)
@@ -218,7 +218,7 @@ def main():
     check("gap: drop G1/setpoint (%)", md_val("drop G1/setpoint"), 30.6, 0.35)
 
     if a.sweep:
-        print("=" * 78); print("E8. PLANT SWEEP  (Table 14, ~7-8 min)"); print("=" * 78)
+        print("=" * 78); print("E8. PLANT SWEEP  (Table 18, ~7-8 min)"); print("=" * 78)
         subprocess.run([sys.executable, "run_sweep.py"], cwd=SIL, check=True,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         want = {(0.015, 1): 99.0, (0.015, 5): 95.4, (0.015, 30): 53.2,
@@ -240,7 +240,7 @@ def main():
                           float(rowd["rollback_benefit_pct"]), want[key], 0.15)
 
     if a.robust:
-        print("=" * 78); print("E9. ROBUSTNESS  (Sec. 9, ~14 min)"); print("=" * 78)
+        print("=" * 78); print("E9. ROBUSTNESS  (Sec. 10, ~14 min)"); print("=" * 78)
         subprocess.run([sys.executable, "run_robustness.py"], cwd=SIL, check=True,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         d = json.load(open(os.path.join(SIL, "results", "robustness.json")))
@@ -262,3 +262,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
