@@ -26,7 +26,10 @@ Raspberry Pi backend is released and parity-checked so the hardware evaluation i
 ## The main result (one command, ~30 minutes)
 
 ```bash
+git clone https://github.com/saydirasulov-alt/governance-runtime-iot.git
+cd governance-runtime-iot          # every command below is run from this directory
 pip install -r requirements.txt
+
 cd sil_testbed
 python run_all.py
 ```
@@ -103,7 +106,8 @@ OPA HTTP path are reported separately because they measure different architectur
 
 Every number reported in the paper is checked by one command:
 
-```
+```bash
+cd governance-runtime-iot          # repository root
 python verify_paper_numbers.py --all      # 127 checks
 ```
 

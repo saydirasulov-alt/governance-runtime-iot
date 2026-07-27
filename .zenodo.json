@@ -1,6 +1,6 @@
 {
   "title": "A Closed-Loop Measurement Study of Runtime Governance in AI-Driven Smart-Building Climate Control: reproducibility package",
-  "description": "Software-in-the-loop testbed and deployable governance service for the Sensors paper 'A Closed-Loop Measurement Study of Runtime Governance in AI-Driven Smart-Building Climate Control'. Closes the control loop through a physical plant model and measures which runtime governance mechanism reduces physical risk; the principal result is that admission control removes a substantial fraction of the unsafe exposure while checkpoint rollback removes only a further 0.2%. No physical hardware was operated.",
+  "description": "Software-in-the-loop testbed and deployable governance service for the Sensors paper 'A Closed-Loop Measurement Study of Runtime Governance in AI-Driven Smart-Building Climate Control'. A learned setpoint controller is treated as untrusted and placed behind a governance runtime of admission gates, a safe-state fallback, checkpoint rollback and a hash-chained audit log; the loop is closed through an RC thermal-zone model so that each mechanism can be scored in unsafe physical exposure (degC-min) by an independent safety oracle that the admission gates never see. The principal results are that admission control removes 19.4% of the unsafe exposure while checkpoint rollback removes only a further 0.2% on a plant with a three-hour time constant, that rejection semantics dominate rejection accuracy, and that an operating-envelope criterion obtained by sweeping plant speed over two orders of magnitude predicts when rollback is worth having. All 127 reported values are checked by a single command. No physical hardware was operated.",
   "upload_type": "software",
   "license": "MIT",
   "access_right": "open",
@@ -40,7 +40,14 @@
     "closed-loop evaluation",
     "rollback operating envelope",
     "physical safety",
-    "software-in-the-loop"
+    "software-in-the-loop",
+    "smart building",
+    "HVAC control",
+    "cyber-physical systems",
+    "runtime assurance",
+    "safety oracle",
+    "checkpoint eligibility",
+    "distribution shift"
   ],
   "related_identifiers": [
     {
@@ -49,5 +56,6 @@
       "scheme": "url"
     }
   ],
-  "language": "eng"
+  "language": "eng",
+  "version": "1.2.2"
 }

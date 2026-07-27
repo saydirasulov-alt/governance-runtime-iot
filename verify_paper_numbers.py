@@ -1,4 +1,4 @@
-﻿"""
+"""
 verify_paper_numbers.py -- regenerate every host-independent number reported in the
 manuscript and check it against the expected value. One command, one scoreboard.
 
