@@ -17,7 +17,7 @@ run, and nothing here should be read as a hardware result.
 ```bash
 pip install numpy pandas scikit-learn matplotlib pytest
 
-python -m pytest tests/ -q     # 17 tests
+python -m pytest tests/ -q     # 25 tests
 python run_sil.py              # ~40 s, writes results/
 python make_figures.py         # writes figures/
 ```
@@ -45,37 +45,37 @@ because each is now a regression test, and because each was invisible before:
 ## What the testbed found
 
 **1. Rollback recovers almost nothing.** Under distribution shift, admission control cuts
-unsafe exposure from 1185 to 955 °C·min. Adding rollback takes it to 954 — a 0.0%
-improvement — and does not reduce the peak excursion at all (3.75 → 3.81 °C).
+unsafe exposure from 1185.3 to 954.8 °C·min. Adding rollback takes it to 953.2 — a further
+0.2% — and does not reduce the peak excursion at all (3.75 → 3.81 °C).
 
 It cannot. The governance *decision* takes 0.44 ms (measured on the real MQTT stack). The
-*physical recovery* takes a median of 60 minutes and up to 146. The exposure has already
+*physical recovery* takes a median of 61 minutes and up to 146. The exposure has already
 been paid before the mechanism can act. Rollback ends an excursion; it does not undo one.
 
 **2. Prevention works where recovery does not.** Same runtime, same rollback, same plant,
-one extra predicate that happens to be right: the oracle policy lands at 1.8 °C·min. The
+one extra predicate that happens to be right: the oracle policy lands at 1.2 °C·min. The
 runtime mechanisms are not the limiting factor. The policy's estimate of context is.
 
 **3. The residual risk belongs to the context estimator, not the runtime.** The deployable
 CO₂ predicate sits between the two: 0.5 °C·min in-distribution (as good as the oracle),
-727.5 under shift (as bad as no predicate at all), because under shift CO₂ stops tracking
+727.7 under shift (as bad as no predicate at all), because under shift CO₂ stops tracking
 occupancy. That gap is a direct measurement of how much residual *physical* risk is
 attributable to the context estimator.
 
 **4. Rejection semantics dominate rejection accuracy.** A perfect gate that reverts to a
 context-blind state (924.8 °C·min) loses to an imperfect gate that reverts to a
-context-independent safe one (727.5). The perfect gate with the safe fallback: 1.8. What
+context-independent safe one (727.7). The perfect gate with the safe fallback: 1.2. What
 the runtime *does* when it says no matters more than how accurately it says it. This is
 invisible in a software-only testbed, where restoring a variable is instantaneous and all
 three fallbacks look identical.
 
 **5. Against irreversible actuation, rollback is not available at all.** With a latching
-actuator, the shipped policy loses authority and enters FAILED_SAFE with 4952 °C·min
+actuator, the shipped policy loses authority and enters FAILED_SAFE with 4951.7 °C·min
 accrued and 10.8% availability. The runtime does not claim to have recovered, because it
 has not. The corrected policy never admits the intent, so the irreversible actuator is
 never reached.
 
-**6. The rollback budget never fires** (9 rollbacks in 162 h). We report this rather than
+**6. The rollback budget never fires** (9 rollbacks in 162.5 h). We report this rather than
 dropping it: a mechanism that never fires is not a contribution and we do not present it
 as one.
 
@@ -92,7 +92,7 @@ gsim/
   loop.py      the governed control loop
 run_sil.py       all experiments
 make_figures.py  figures, generated from results/ only -- no hand-typed numbers
-tests/           17 tests, three of which encode bugs we shipped and caught
+tests/           25 tests, three of which encode bugs we shipped and caught
 ds/              UCI Occupancy Detection (Candanedo & Feldheim, 2016)
 ```
 

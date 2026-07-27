@@ -16,7 +16,11 @@ pytest -q                      # 9 tests, including the documented G2 gap
 python experiments/e2e_demo.py # end-to-end on a real MQTT stack
 ```
 
-Expected (measured on a real stack, not modelled):
+Expected (measured on a real stack, not modelled). The latency line below is one host's
+output and is reproduced verbatim from that run; decision latencies are host-dependent and
+move by several times between machines. The paper reports 0.44 ms median on its reference
+host and 0.447 ms on an independent one (Table 12 and `reproduction/REPRODUCTION_EVIDENCE.md`).
+No claim in the paper rests on a single one of these values:
 
 ```
 intents published        : 240
