@@ -38,7 +38,25 @@ Runs the 25 tests, the closed-loop safety experiments (E1–E7), the figures, th
 robustness audit, and writes a host-stamped transcript to `results/RUN_ALL_LOG.txt`. The headline
 figures (`1185.3 -> 954.8 -> 953.2 -> 727.7 -> 1.2` degC-min under distribution shift, `18/18`
 robustness checks) drop straight out of it. Every plotted value is read from the results file, so no
-figure can contradict its table. To just watch the AI model train, from `sil_testbed/` run
+figure can contradict its table.
+
+The headline numbers in one line, as the paper reports them:
+
+| Arm | Unsafe exposure under shift |
+|---|---|
+| Ungoverned | 1185.3 °C·min |
+| Shipped policy, no rollback | 954.8 °C·min |
+| Shipped policy + rollback | 953.2 °C·min |
+
+Admission control removes 19.4% of the unsafe exposure; checkpoint rollback removes a further
+**0.2%** in the reference deterministic run, and 0.1%–0.4% across the four sensor-noise seeds
+(7, 11, 23, 101) of the robustness audit. These are deterministic paired outcomes on one trace, not
+samples from a population, so no confidence interval is attached to them; bootstrap intervals appear
+only where a seed distribution exists (the 30-seed backend and scalability experiments).
+
+**The release evaluated in the paper is `v1.2.0`, Git commit `34a5fcd`.** Later releases change
+documentation and metadata only; no executable line differs, and `verify_paper_numbers.py --all`
+returns 127 PASS / 0 FAIL on every one of them. To just watch the AI model train, from `sil_testbed/` run
 `python full_training.py`.
 
 ## The deployable governance service (Tier 3 prototype)

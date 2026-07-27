@@ -46,7 +46,10 @@ because each is now a regression test, and because each was invisible before:
 
 **1. Rollback recovers almost nothing.** Under distribution shift, admission control cuts
 unsafe exposure from 1185.3 to 954.8 °C·min. Adding rollback takes it to 953.2 — a further
-0.2% — and does not reduce the peak excursion at all (3.75 → 3.81 °C).
+0.2% — and does not reduce the peak excursion at all (3.75 → 3.81 °C). Across the four
+sensor-noise seeds of the robustness audit (7, 11, 23, 101) that further benefit ranges from
+0.1% to 0.4%. These are deterministic paired runs on one trace, so the range is a
+noise-seed sensitivity, not a confidence interval.
 
 It cannot. The governance *decision* takes 0.44 ms (measured on the real MQTT stack). The
 *physical recovery* takes a median of 61 minutes and up to 146. The exposure has already
