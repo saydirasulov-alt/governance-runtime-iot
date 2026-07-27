@@ -1285,7 +1285,7 @@ def run_closed_loop(
             # imperfect one, which is a contradiction that only a physical plant can
             # surface.
             #
-            # So rejection reverts the actuator to the last verified checkpoint, which
+            # So rejection reverts the actuator to the latest ELIGIBLE checkpoint, which
             # is what the governance state machine says it does. That single line is the
             # difference between a gate that filters and a gate that governs.
             r.rejected += 1
@@ -1336,10 +1336,25 @@ def run_closed_loop(
                 # only reason we caught it is that the plant has inertia: in a testbed
                 # without physics the two rules are indistinguishable.
                 #
-                # A setpoint earns a checkpoint only by PROVING it holds the room safely:
-                # the plant must be inside the safe envelope AND settled at the commanded
-                # setpoint. Until the room has actually reached the setpoint, we do not
-                # know what that setpoint does.
+                # A setpoint earns a checkpoint only by PROVING it holds the room safely.
+                # Hence the two-stage semantics used throughout the paper: a successful
+                # commit creates a PROVISIONAL record, and that record becomes an ELIGIBLE
+                # recovery target only once the actuator has acknowledged the command and
+                # the plant is inside the safe envelope AND settled at it. Until the room
+                # has actually reached the setpoint, we do not know what that setpoint does.
+                #
+                # SCOPE, stated here because the paper states it. This eligibility test,
+                # and the monitor's excursion test further below, read the evaluation
+                # bands, whose occupancy argument is the ground-truth label. The ADMISSION
+                # gates G1-G4 never receive it, so the false-negative measurements stay
+                # non-circular. The recovery path, however, is therefore idealized: it
+                # selects its band under oracle-assisted context. We do not claim a
+                # direction or a magnitude for that bias; what the experiment supports is
+                # the sharper statement that even WITH ground-truth context available to
+                # the recovery predicates, rollback removed only 0.2% of unsafe exposure
+                # on this slow plant. A deployable instantiation must use runtime-visible
+                # observables only: measured temperature, the gate's own context
+                # predicate, or a fixed context-independent band.
                 settled = abs(plant.T - _sp(act)) <= SETTLE_TOL_C
                 if (state.state == G.GovernanceState.RUNNING
                         and decision == "PASS" and settled):

@@ -1,4 +1,4 @@
-# A Closed-Loop Measurement Study of Runtime Governance for AI-Driven IoT
+# A Closed-Loop Measurement Study of Runtime Governance in AI-Driven Smart-Building Climate Control
 
 [![Tests](https://github.com/saydirasulov-alt/governance-runtime-iot/actions/workflows/ci.yml/badge.svg)](https://github.com/saydirasulov-alt/governance-runtime-iot/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -6,7 +6,7 @@
 
 Reproducibility package and deployable reference service for:
 
-> **A Closed-Loop Measurement Study of Runtime Governance for AI-Driven IoT**
+> **A Closed-Loop Measurement Study of Runtime Governance in AI-Driven Smart-Building Climate Control**
 > N. Saydirasulov Saydirasulovic, D. A. Davronbekov, M. M. Makhmudov, Y. I. Cho. *Sensors* (MDPI).
 
 Runtime governance for AI-driven IoT is usually presented as a stack of mechanisms, namely admission
@@ -98,6 +98,50 @@ It uploads `policy_gates.rego`, replays 240 intents (120 admit / 120 reject), ch
 decision against the runtime's own gate logic, and reports a host-stamped median / P90 to
 `results/opa_http_latency.csv`. The in-process decision path (the 0.44 / 0.09 ms figures) and this
 OPA HTTP path are reported separately because they measure different architectures.
+
+## Reproduction record
+
+Every number reported in the paper is checked by one command:
+
+```
+python verify_paper_numbers.py --all      # 127 checks
+```
+
+The machine-generated transcript of a full end-to-end run is committed under `reproduction/`:
+
+| File | Contents |
+|---|---|
+| `reproduction/MASTER_REPRODUCTION_LOG.txt` | full session transcript, ending in `RESULT: 127 PASS / 0 FAIL (127 checks)` |
+| `reproduction/REPRODUCTION_EVIDENCE.md` | environment table, per-group breakdown, host-dependent latencies |
+| `reproduction/CLAIM_AUDIT.md` | claim-by-claim audit against the manuscript |
+| `reproduction/OPA_SERVER_LOG.txt` | OPA v1.18.2 server log for the live HTTP measurement |
+| `results/`, `sil_testbed/results/` | per-experiment logs, CSVs and figures |
+
+The dataset is verified at load time: `ds/datatraining.txt`, 604,818 bytes, SHA-256
+`034506256a005e0ecdec7395d93a21bbe81fff30077edd023306c1b5156c631f`.
+
+The only occurrences of the string `FAIL` in the master log are the state name `FAILED_SAFE`,
+which is an expected outcome of experiment E3, and the final `0 FAIL` count.
+
+## Checkpoint semantics, and the scope of oracle independence
+
+A successful commit creates a **provisional** record. It becomes an **eligible** recovery target
+only after the actuator has acknowledged the command and the plant has stabilized inside the safe
+envelope. Rollback and rejection both restore the latest *eligible* checkpoint.
+
+The admission gates G1-G4 never receive the safety oracle, which is what makes the false-negative
+measurements non-circular. In this software-in-the-loop testbed the *recovery* path is idealized:
+the monitor's band selection and the checkpoint-eligibility predicate read the evaluation bands,
+whose occupancy argument is the ground-truth label. We do not claim a direction or a magnitude for
+that bias. What the experiment supports is the sharper statement that even with ground-truth context
+available to the recovery predicates, rollback removed only 0.2% of unsafe exposure on this slow
+plant. A deployable instantiation must use runtime-visible observables only. See the comments around
+the checkpoint commit in `sil_testbed/gsim/loop.py`.
+
+## Figure 1 source
+
+`docs/fig1_architecture.tex` is the TikZ source of the architecture figure in the paper, with the
+compiled `docs/fig1_architecture.pdf` alongside it.
 
 ## Layout
 

@@ -1,0 +1,30 @@
+==============================================================================
+REPRODUCTION LOG
+==============================================================================
+date          : 2026-07-26T22:04:06
+host          : PC-Lab
+os            : Windows 11 (AMD64)
+python        : 3.13.13
+
+[OK ] experiment_runner.py               162.7s   6 experiments x 30 seeds -> results/*.csv
+[OK ] stats_analysis.py                    8.1s   Tables 5, 7, 8 (backend, ablation, significance)
+        -> adversarial partial-corruption: partial_corruption       : det=0.813 ua=35/187
+[OK ] gate_complexity_benchmark.py         0.6s   Table 6 (gate cost vs complexity)
+[OK ] verify_corrected_g2.py               0.2s   Table 11 (corrected-G2: 18.7% -> 0.0%)
+        -> corrected-G2 unsafe admission: Timestamp + source (corrected):                   0.0%
+[OK ] ai_failure_characterization.py       2.6s   Table 12 / Figure 7 (AI-failure vs physical oracle)
+        -> AI-failure blind-gate AUC: Context-blind gate ROC AUC : 0.948
+[OK ] rollback_demo.py                     4.9s   Figure 3 (verified rollback, measured MTTR)
+        -> rollback restorations verified: VERIFIED (state == checkpoint hash): 6036/6036
+[OK ] verify_audit_chain.py                0.1s   tamper-evident audit chain
+[OK ] test_policy_loader.py                2.0s   declarative gates == legacy gates (400k intents)
+[OK ] opa_conformance.py                   0.1s   OPA Rego conformance fixtures
+
+total wall clock : 3.0 min
+overall          : ALL STEPS SUCCEEDED
+
+The backend, ablation, gate-cost, corrected-G2, AI-failure, audit-chain and OPA-conformance
+values above are produced on this machine. The closed-loop, sweep and robustness
+numbers come from  python sil_testbed/run_all.py ; the real-MQTT prototype from
+python run_governance_demo.py ; the OPA HTTP latency from  python experiments/opa_http_latency.py .
+==============================================================================

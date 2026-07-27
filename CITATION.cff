@@ -1,10 +1,10 @@
 cff-version: 1.2.0
-title: "A Closed-Loop Measurement Study of Runtime Governance for AI-Driven IoT"
+title: "A Closed-Loop Measurement Study of Runtime Governance in AI-Driven Smart-Building Climate Control"
 message: "If you use this software, please cite both the software (via its Zenodo DOI) and the associated paper."
 type: software
-version: "1.2.0"
+version: "1.2.1"
 doi: "10.5281/zenodo.21374935"
-date-released: "2026-07-25"
+date-released: "2026-07-27"
 license: MIT
 repository-code: "https://github.com/saydirasulov-alt/governance-runtime-iot"
 authors:
@@ -25,7 +25,7 @@ keywords:
   - reproducibility
 preferred-citation:
   type: article
-  title: "A Closed-Loop Measurement Study of Runtime Governance for AI-Driven IoT"
+  title: "A Closed-Loop Measurement Study of Runtime Governance in AI-Driven Smart-Building Climate Control"
   journal: "Sensors"
   publisher:
     name: MDPI

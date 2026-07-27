@@ -4,7 +4,7 @@ RUN ALL
   host    PC-Lab
   os      Windows 11
   python  3.13.13
-  cwd     C:\Users\Gee\Documents\GitHub\governance-runtime-iot\sil_testbed
+  cwd     C:\Users\Gee\Documents\New project\tmp\governance-runtime-iot-v1.2.0\sil_testbed
 
   No physical hardware is operated. Every physical quantity below is produced by
   the digital twin, whose model and parameters are given in full in gsim/plant.py.
@@ -13,9 +13,15 @@ RUN ALL
 [1/5]  tests   (about 5 s)
 ------------------------------------------------------------------------------
 .........................                                                [100%]
-25 passed in 1.49s
+============================== warnings summary ===============================
+..\..\..\..\..\miniconda3\Lib\site-packages\_pytest\cacheprovider.py:469
+  C:\Users\Gee\miniconda3\Lib\site-packages\_pytest\cacheprovider.py:469: PytestCacheWarning: could not create cache path C:\Users\Gee\Documents\New project\tmp\governance-runtime-iot-v1.2.0\sil_testbed\.pytest_cache\v\cache\nodeids: [WinError 5] Access is denied: 'C:\\Users\\Gee\\Documents\\New project\\tmp\\governance-runtime-iot-v1.2.0\\sil_testbed\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
 
-[1/5] tests OK  (2 s)
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+25 passed, 1 warning in 1.88s
+
+[1/5] tests OK  (3 s)
 
 ------------------------------------------------------------------------------
 [2/5]  E1-E7   (about 60 s)
@@ -149,15 +155,15 @@ E4.  THE SAME EXPERIMENT IN-DISTRIBUTION
 ==============================================================================
 E5.  WHAT GOVERNANCE COSTS, AND AUDIT INTEGRITY
 ==============================================================================
-  gate evaluation, median     3.30 us shipped     3.80 us corrected
-  gate evaluation, p99        5.10 us shipped     6.10 us corrected
+  gate evaluation, median     4.00 us shipped     4.40 us corrected
+  gate evaluation, p99        7.10 us shipped     7.60 us corrected
   rollback decision path    measured separately on the REAL MQTT stack
                             (median 0.44 ms end-to-end); the twin's own
                             function-call time is not a meaningful number
                             and is deliberately not reported.
   audit chain               verified=True  9761 entries
 
-  The context predicate costs +0.50 us per intent and removes 226 degC-min of
+  The context predicate costs +0.40 us per intent and removes 226 degC-min of
   unsafe exposure. That ratio, not the absolute latency, is the deployment
   argument, and it is the opposite of the ratio rollback offers.
 
@@ -236,11 +242,11 @@ HAL PARITY: THE SAME GOVERNANCE CODE TARGETS THE RASPBERRY PI
 ==============================================================================
 DONE
 ==============================================================================
-  61.4 s
+  81.1 s
   results/sil_results.csv   results/SIL_LOG.txt
   next: python make_figures.py
 
-[2/5] E1-E7 OK  (63 s)
+[2/5] E1-E7 OK  (83 s)
 
 ------------------------------------------------------------------------------
 [3/5]  figures   (about 5 s)
@@ -330,10 +336,10 @@ WHAT THE SWEEP SAYS
   code is written: the actuator's recovery time, the control period, and the
   monitor's sampling rate.
 
-  415.6 s
+  665.9 s
   results/sweep_results.csv   figures/fig_sil_5_when_rollback_works.png
 
-[4/5] E8 sweep OK  (418 s)
+[4/5] E8 sweep OK  (668 s)
 
 ------------------------------------------------------------------------------
 [5/5]  E9 audit   (about 23 min)
@@ -464,9 +470,9 @@ VERDICT
   C2  corrected beats shipped        18/18 HOLDS
   C3  oracle removes ~all of it      18/18 HOLDS
 
-  826.7 s   results/robustness.json
+  1038.8 s   results/robustness.json
 
-[5/5] E9 audit OK  (828 s)
+[5/5] E9 audit OK  (1041 s)
 
 ==============================================================================
 WHAT THE PAPER NEEDS
@@ -504,5 +510,5 @@ E9  robustness
       floor: a perfect model scores 0.0 under the grace window (must be 0.0)
 
   Send me this block, plus results/RUN_ALL_LOG.txt.
-TOTAL 1313 s
-Transcript: C:\Users\Gee\Documents\GitHub\governance-runtime-iot\sil_testbed\results\RUN_ALL_LOG.txt
+TOTAL 1797 s
+Transcript: C:\Users\Gee\Documents\New project\tmp\governance-runtime-iot-v1.2.0\sil_testbed\results\RUN_ALL_LOG.txt
