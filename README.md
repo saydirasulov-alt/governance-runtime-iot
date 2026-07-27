@@ -15,8 +15,10 @@ This package closes the control loop through a physical plant model and measures
 actually reduces physical risk. The headline result is negative and reproducible: **admission control
 removes a substantial fraction of the unsafe physical exposure, while checkpoint rollback removes only a further 0.2%**,
 because the governance decision costs 0.44 ms while the plant recovers in a median of 61 minutes.
-Sweeping plant speed turns this into a transferable criterion: rollback protects safety only on plants
-restored faster than the next command arrives and sampled faster than they leave the safe set.
+Sweeping plant speed turns this into a transferable criterion: rollback protects safety materially only
+on plants restored faster than the next command arrives and sampled faster than they leave the safe set.
+Below that threshold it never removed more than 14.7% of unsafe exposure at any monitor sampling period
+we tested, against about 95% above it.
 
 This is a **software-in-the-loop** study. No physical sensor or actuator hardware was operated; the
 Raspberry Pi backend is released and parity-checked so the hardware evaluation is an interface swap.

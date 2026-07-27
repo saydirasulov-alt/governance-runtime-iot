@@ -49,7 +49,9 @@ unsafe exposure from 1185.3 to 954.8 °C·min. Adding rollback takes it to 953.2
 0.2% — and does not reduce the peak excursion at all (3.75 → 3.81 °C). Across the four
 sensor-noise seeds of the robustness audit (7, 11, 23, 101) that further benefit ranges from
 0.1% to 0.4%. These are deterministic paired runs on one trace, so the range is a
-noise-seed sensitivity, not a confidence interval.
+noise-seed sensitivity, not a confidence interval. This building sits far below the rollback
+threshold; on the plant sweep (`run_sweep.py`) rollback never removed more than 14.7% of unsafe
+exposure below that threshold at any monitor period tested, against about 95% above it.
 
 It cannot. The governance *decision* takes 0.44 ms (measured on the real MQTT stack). The
 *physical recovery* takes a median of 61 minutes and up to 146. The exposure has already
